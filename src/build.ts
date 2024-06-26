@@ -29,7 +29,7 @@ function generateDynamicJS(): string {
   const pageJS =
     `
       <script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>
-      <script>
+      <script defer="">
         var sengineLinks = document.querySelectorAll("#sengine a");
         sengineLinks.forEach(function (link) {
             link.addEventListener("click", function (event) {
@@ -39,9 +39,7 @@ function generateDynamicJS(): string {
                 }
                 link.classList.add("active");
                 var searchFav = document.querySelector("#search-fav");
-                var url = 'https://' + link.getAttribute("data-url").match(` +
-    /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i +
-    `)[1] || '';
+                var url = 'https://' + link.getAttribute("data-url").match(` + /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i + `)[1] || '';
                 searchFav.setAttribute("src", "${config.faviconGetter}" + url);
             });
         });
@@ -51,9 +49,7 @@ function generateDynamicJS(): string {
             var activeLink = document.querySelector("#sengine a.active");
             var url = activeLink.getAttribute("data-url");
             var searchInput = document.querySelector("#searchinput");
-            url = url.replace(` +
-    /\$s/ +
-    `, searchInput.value);
+            url = url.replace(` + /\$s/ + `, searchInput.value);
             window.open(url);
         });
         var searchInput = document.querySelector("#searchinput");
@@ -62,12 +58,6 @@ function generateDynamicJS(): string {
                 searchBtn.click();
             }
         });
-        //var menuBtn = document.querySelector("#menubtn");
-        //menuBtn.addEventListener("click", function (event) {
-        //    var sellerModal = document.querySelector("#seller");
-        //    sellerModal.style.display = "block";
-        //});
-
     </script>
       `;
   return pageJS;

@@ -153,7 +153,7 @@ function renderDynamicDiv1(): string {
     ['class="title-div prevent-select"'],
     element(
       "i",
-      ['class="globe-icon"', 'style="width: 1em;  height: 1em;"'],
+      ['class="globe-icon"'],
       element(
         "svg",
         [

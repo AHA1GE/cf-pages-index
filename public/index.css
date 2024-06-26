@@ -122,6 +122,8 @@
 
     header.header>div.head-container>h1.title-div>i.glob-icon {
         display: table-cell;
+        width: 1em;
+        height: 1em;
     }
 
     header.header>div.head-container>h1.title-div>div.title {

@@ -262,7 +262,6 @@
 
     div.search-engine-wrapper>div.search-engine-switch-menu>a.item {
         flex: 0 0 auto;
-        user-select: none;
         padding-left: 1.5rem;
         padding-top: .6rem;
         padding-bottom: 1rem;

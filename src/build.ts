@@ -234,7 +234,7 @@ function renderDynamicDiv1(): string {
 
   var searchEngineSwitchMenu = element(
     "div",
-    ['id="sengine"', 'class="search-engine-switch-menu"'],
+    ['id="sengine"', 'class="search-engine-switch-menu prevent-select"'],
     config.search_engine
       .map((link, key) => {
         if (key == 0) {

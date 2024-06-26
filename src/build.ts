@@ -29,10 +29,10 @@ function generateDynamicJS(): string {
   const hitokotoJS = `<script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>`
   const searchEngineSwitchMenuJS =
     `<script defer="">
-      var sengineLinks = document.querySelectorAll("#sengine a");
+      var sengineLinks = document.querySelectorAll("#sengine button");
       sengineLinks.forEach(function (link) {
         link.addEventListener("click", function (event) {
-          var activeLink = document.querySelector("#sengine a.active");
+          var activeLink = document.querySelector("#sengine button.active");
           if (activeLink) {
             activeLink.classList.remove("active");
           }
@@ -45,7 +45,7 @@ function generateDynamicJS(): string {
 
       var searchBtn = document.querySelector("#search");
       searchBtn.addEventListener("click", function (event) {
-        var activeLink = document.querySelector("#sengine a.active");
+        var activeLink = document.querySelector("#sengine button.active");
         var url = activeLink.getAttribute("data-url");
         var searchInput = document.querySelector("#searchinput");
         url = url.replace(` + /\$s/ + `, searchInput.value);
@@ -227,7 +227,7 @@ function renderDynamicDiv1(): string {
       .map((link, key) => {
         if (key == 0) {
           return element(
-            "a",
+            "button",
             ['class="active item"', `data-url="${link.template}"`],
             link.name
           );

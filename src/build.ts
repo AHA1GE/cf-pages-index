@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import config from './configs.js';
+import config from './configs.json' with { type: "json" };;
 
 /**
  * 用来创建element的工具函数

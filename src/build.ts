@@ -25,6 +25,54 @@ function headElement(tag: string, attrs: string[]): string {
   return `<${tag} ${attrs.join(" ")}>`;
 }
 
+function generateDynamicJS(): string {
+  const pageJS =
+    `
+      <script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>
+      <script>
+        var sengineLinks = document.querySelectorAll("#sengine a");
+        sengineLinks.forEach(function (link) {
+            link.addEventListener("click", function (event) {
+                var activeLink = document.querySelector("#sengine a.active");
+                if (activeLink) {
+                    activeLink.classList.remove("active");
+                }
+                link.classList.add("active");
+                var searchFav = document.querySelector("#search-fav");
+                var url = 'https://' + link.getAttribute("data-url").match(` +
+    /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i +
+    `)[1] || '';
+                searchFav.setAttribute("src", "${config.faviconGetter}" + url);
+            });
+        });
+
+        var searchBtn = document.querySelector("#search");
+        searchBtn.addEventListener("click", function (event) {
+            var activeLink = document.querySelector("#sengine a.active");
+            var url = activeLink.getAttribute("data-url");
+            var searchInput = document.querySelector("#searchinput");
+            url = url.replace(` +
+    /\$s/ +
+    `, searchInput.value);
+            window.open(url);
+        });
+        var searchInput = document.querySelector("#searchinput");
+        searchInput.addEventListener("keypress", function (event) {
+            if (event.keyCode === 13) {
+                searchBtn.click();
+            }
+        });
+        //var menuBtn = document.querySelector("#menubtn");
+        //menuBtn.addEventListener("click", function (event) {
+        //    var sellerModal = document.querySelector("#seller");
+        //    sellerModal.style.display = "block";
+        //});
+
+    </script>
+      `;
+  return pageJS;
+}
+
 /**
  * 生成 HTML 静态部分的函数
  * @returns {string}  以字符串返回的静态部分的页面
@@ -38,10 +86,9 @@ function generateStaticHTML(): string {
           <header></header>
           <main></main>
           <footer></footer>
+          <script src="/dynamic.js"></script>
           <script src="/index.js"></script>
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526526482489599" crossorigin="anonymous"></script>
         </body>
-        <style src="/index.css"></style>
       </html>
     `;
 }
@@ -299,7 +346,7 @@ function renderDynamicDiv3(): string {
         "a",
         [
           'class="label"',
-          'href="https://github.com/AHA1GE/cf-worker-dir-remasterd"',
+          'href="https://github.com/AHA1GE/cf-pages-index"',
           'target="_blank"',
           'rel="noreferrer noopener"',
         ],
@@ -319,14 +366,14 @@ function renderDynamicDiv3(): string {
               'd="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"',
             ])
           )
-        ) + "&nbspCWD-re"
+        ) + "&nbspCFPI"
       ) +
       "&nbsp&nbsp © Based on" +
       element(
         "a",
         [
           'class="label"',
-          'href="https://github.com/AHA1GE/cf-worker-dir-remasterd"',
+          'href="https://github.com/AHA1GE/cf-pages-index/blob/main/LICENSE"',
           'target="_blank"',
           'rel="noreferrer noopener"',
         ],
@@ -346,7 +393,7 @@ function renderDynamicDiv3(): string {
               'd="M384 32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H398.4c-5.2 25.8-22.9 47.1-46.4 57.3V448H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 128c-17.7 0-32-14.3-32-32s14.3-32 32-32H288V153.3c-23.5-10.3-41.2-31.6-46.4-57.3H128c-17.7 0-32-14.3-32-32s14.3-32 32-32H256c14.6-19.4 37.8-32 64-32s49.4 12.6 64 32zm55.6 288H584.4L512 195.8 439.6 320zM512 416c-62.9 0-115.2-34-126-78.9c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C627.2 382 574.9 416 512 416zM126.8 195.8L54.4 320H199.3L126.8 195.8zM.9 337.1c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C242 382 189.7 416 126.8 416S11.7 382 .9 337.1z"',
             ])
           )
-        ) + "&nbspMIT License"
+        ) + "&nbspGPLv3 License"
       )
     )
   );
@@ -363,11 +410,13 @@ async function renderHTML(): Promise<string> {
   const dynamicDiv1: string = renderDynamicDiv1();
   const dynamicDiv2: string = renderDynamicDiv2();
   const dynamicDiv3: string = renderDynamicDiv3();
+  const dynamicJS: string = generateDynamicJS();
   let html = staticHTML
     .replace('<head src="/dynamicHeads.html"></head>', `${dynamicHead}`)
     .replace("<header></header>", `${dynamicDiv1}`)
     .replace("<main></main>", `${dynamicDiv2}`)
     .replace("<footer></footer>", `${dynamicDiv3}`)
+    .replace('<script src="/dynamic.js"></script>', `${dynamicJS}`)
   html = html;
   return html;
 }

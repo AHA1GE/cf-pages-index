@@ -72,6 +72,7 @@ async function generateDynamicHead(): Promise<string> {
       'rel="icon"',
       'href="https://ysun.site/images/favicon.ico"',
     ]),
+    headElement("link", ['rel="stylesheet"', 'href="/index.css"']),
     "</head>",
   ];
   const head: string = headList.join("\n");

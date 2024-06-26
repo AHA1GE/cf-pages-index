@@ -120,7 +120,7 @@ async function generateDynamicHead(): Promise<string> {
  **/
 function renderDynamicDiv1(): string {
   const item = (template: string, name: string) =>
-    element("a", ['class="item"', `data-url="${template}"`], name);
+    element("button", ['class="item"', `data-url="${template}"`], name);
 
   var headerHitoko = element(
     "div",

@@ -26,41 +26,39 @@ function headElement(tag: string, attrs: string[]): string {
 }
 
 function generateDynamicJS(): string {
-  const pageJS =
-    `
-      <script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>
-      <script defer="">
-        var sengineLinks = document.querySelectorAll("#sengine a");
-        sengineLinks.forEach(function (link) {
-            link.addEventListener("click", function (event) {
-                var activeLink = document.querySelector("#sengine a.active");
-                if (activeLink) {
-                    activeLink.classList.remove("active");
-                }
-                link.classList.add("active");
-                var searchFav = document.querySelector("#search-fav");
-                var url = 'https://' + link.getAttribute("data-url").match(` + /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i + `)[1] || '';
-                searchFav.setAttribute("src", "${config.faviconGetter}" + url);
-            });
+  const hitokotoJS = `<script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>`
+  const searchEngineSwitchMenuJS =
+    `<script defer="">
+      var sengineLinks = document.querySelectorAll("#sengine a");
+      sengineLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          var activeLink = document.querySelector("#sengine a.active");
+          if (activeLink) {
+            activeLink.classList.remove("active");
+          }
+          link.classList.add("active");
+          var searchFav = document.querySelector("#search-fav");
+          var url = 'https://' + link.getAttribute("data-url").match(` + /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i + `)[1] || '';
+          searchFav.setAttribute("src", "${config.faviconGetter}" + url);
         });
+      });
 
-        var searchBtn = document.querySelector("#search");
-        searchBtn.addEventListener("click", function (event) {
-            var activeLink = document.querySelector("#sengine a.active");
-            var url = activeLink.getAttribute("data-url");
-            var searchInput = document.querySelector("#searchinput");
-            url = url.replace(` + /\$s/ + `, searchInput.value);
-            window.open(url);
-        });
+      var searchBtn = document.querySelector("#search");
+      searchBtn.addEventListener("click", function (event) {
+        var activeLink = document.querySelector("#sengine a.active");
+        var url = activeLink.getAttribute("data-url");
         var searchInput = document.querySelector("#searchinput");
-        searchInput.addEventListener("keypress", function (event) {
-            if (event.keyCode === 13) {
-                searchBtn.click();
-            }
-        });
-    </script>
-      `;
-  return pageJS;
+        url = url.replace(` + /\$s/ + `, searchInput.value);
+        window.open(url);
+      });
+      var searchInput = document.querySelector("#searchinput");
+      searchInput.addEventListener("keypress", function (event) {
+        if (event.keyCode === 13) {
+          searchBtn.click();
+        }
+      });
+    </script>`;
+  return hitokotoJS + searchEngineSwitchMenuJS;
 }
 
 /**

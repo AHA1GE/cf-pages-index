@@ -32,13 +32,13 @@
                 {
                     "url": "https://gi.aha1.top/",
                     "name": "GI Tools",
-                    "desc": "Anime game cheese.",
+                    "desc": "Anime game tools",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://mb.aha1.top/",
                     "name": "Message Board",
-                    "desc": "Leave me a message.",
+                    "desc": "Leave me a message",
                     "icon_size": "32"
                 },
                 {
@@ -62,25 +62,25 @@
                 {
                     "url": "https://ts466c.ahaigege.com/",
                     "name": "TS466C",
-                    "desc": "Go to QNAP NAS TS466C.",
+                    "desc": "Go to QNAP NAS TS466C",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://ddns466c.ahaigege.com:8443/",
                     "name": "TS466C DDNS",
-                    "desc": "Go to QNAP NAS TS466C.",
+                    "desc": "Go to QNAP NAS TS466C",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://ts532x.ahaigege.com/",
                     "name": "TS532X",
-                    "desc": "Go to QNAP NAS TS532X.",
+                    "desc": "Go to QNAP NAS TS532X",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://ddns532x.ahaigege.com:8443/",
                     "name": "TS532X DDNS",
-                    "desc": "Go to QNAP NAS TS532X.",
+                    "desc": "Go to QNAP NAS TS532X",
                     "icon_size": "32"
                 }
             ]
@@ -92,25 +92,25 @@
                 {
                     "url": "https://gpt.dofor.fun/",
                     "name": "China GPTs",
-                    "desc": "China LLMs in lobe-chat.",
+                    "desc": "China LLMs in lobe-chat",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://next.dofor.fun/",
                     "name": "NextChat",
-                    "desc": "Simple basic LLM webui.",
+                    "desc": "Simple basic LLM webui",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://oneapi.dofor.fun/",
                     "name": "One Api",
-                    "desc": "Api relay for GPTs.",
+                    "desc": "Api relay for GPTs",
                     "icon_size": "32"
                 },
                 {
                     "url": "https://vno.aha1.top/",
                     "name": "Vnology",
-                    "desc": "Go to Virtual Synology NAS.",
+                    "desc": "Go to Virtual Synology NAS",
                     "icon_size": "32"
                 }
             ]
@@ -132,9 +132,9 @@
                     "icon_size": "32"
                 },
                 {
-                    "url": "https://r.aha1.top/",
-                    "name": "Music Unlock",
-                    "desc": "Decrypt music files.",
+                    "url": "https://reader.aha1.top/",
+                    "name": "Reader",
+                    "desc": "Read novels online for free",
                     "icon_size": "32"
                 },
                 {

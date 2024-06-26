@@ -1,0 +1,22 @@
+{
+  "name": "cf-pages-index",
+  "version": "1.0.0",
+  "description": "use cloudflare pages to serve index",
+  "type": "module",
+  "main": "dist/build.js",
+  "scripts": {
+    "build": "tsc && node dist/build.js",
+    "test": "tsc && node dist/build.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.2"
+  }
+}

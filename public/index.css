@@ -11,7 +11,7 @@
         font-size: 1rem;
         background-color: #222222;
         color: #f1f1f1;
-        overflow-x: clip;
+        overflow-x: hidden;
         overflow-y: scroll;
     }
 

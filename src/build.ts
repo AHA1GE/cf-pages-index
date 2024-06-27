@@ -39,7 +39,7 @@ function generateDynamicJS(): string {
           link.classList.add("active");
           var searchFav = document.querySelector("#search-fav");
           var url = 'https://' + link.getAttribute("data-url").match(` + /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i + `)[1] || '';
-          searchFav.setAttribute("src", "${config.faviconGetter}" + encodeURIComponent(url));
+          searchFav.setAttribute("src", "${config.faviconGetter}" + "/sz/32/url/" + encodeURIComponent(url));
         });
       });
 
@@ -177,7 +177,7 @@ function renderDynamicDiv1(): string {
       [
         'id="search-fav"',
         'class="search-engine-favicon-top-left-float"',
-        `src="${config.faviconGetter}${encodeURIComponent(`https://${config.search_engine[0].template.match(/^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i)?.[1] || ""}`)}"`,
+        `src="${config.faviconGetter}/url/${encodeURIComponent(`https://${config.search_engine[0].template.match(/^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i)?.[1] || ""}`)}"`,
         'alt="logo"',
       ],
       ""
@@ -274,7 +274,7 @@ function renderDynamicDiv2(): string {
               "img",
               [
                 'class="card-favicon-top-left-float" alt="logo"',
-                `src="${config.faviconGetter}${encodeURIComponent(`https://${url.match(/^https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i)?.[1] || ""}`)}/sz/${icon_size}"`,
+                `src="${config.faviconGetter}/sz/${icon_size}/url/${encodeURIComponent(`https://${url.match(/^https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i)?.[1] || ""}`)}"`,
               ],
               ""
             ) +

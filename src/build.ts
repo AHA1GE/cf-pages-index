@@ -344,7 +344,7 @@ function renderDynamicDiv3(): string {
     element(
       "div",
       ['class="footer-div"'],
-      "Powered by" +
+      "Powered by " +
       element(
         "a",
         [
@@ -371,7 +371,7 @@ function renderDynamicDiv3(): string {
           )
         ) + "&nbspCFPI"
       ) +
-      "&nbsp&nbsp © Based on" +
+      "&nbsp © Based on " +
       element(
         "a",
         [

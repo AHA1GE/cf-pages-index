@@ -47,7 +47,7 @@ function generateDynamicJS(): string {
           link.classList.add("active");
           var searchFav = document.querySelector("#search-fav");
           var url = 'https://' + link.getAttribute("data-url").match(` + /^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i + `)[1] || '';
-          searchFav.setAttribute("src", "${config.faviconGetter}" + "/sz/32/url/" + encodeURIComponent(url));
+          searchFav.setAttribute("src", "${config.faviconGetter}/sz/32/url/" + encodeURIComponent(url));
         });
       });
 

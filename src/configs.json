@@ -1,6 +1,6 @@
 {
     "remoteURI": "https://raw.githubusercontent.com/AHA1GE/cf-worker-dir-remasterd/main/src/",
-    "faviconGetter": "https://favicon.ahaigege.com/?url=",
+    "faviconGetter": "https://favicon.ahaigege.com/url/",
     "title": "AHAI Nav",
     "subtitle": "AHAI's Index",
     "hitokoto": true,

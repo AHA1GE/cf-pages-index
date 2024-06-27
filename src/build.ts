@@ -34,7 +34,7 @@ function composeFaviconGetterUri(target: string, size: string): string {
 
 
 function generateDynamicJS(): string {
-  const hitokotoJS = `<script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>`
+  // const hitokotoJS = `<script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>`
   const searchEngineSwitchMenuJS =
     `<script defer="">
       var sengineLinks = document.querySelectorAll("#sengine button");
@@ -66,7 +66,7 @@ function generateDynamicJS(): string {
         }
       });
     </script>`;
-  return hitokotoJS + searchEngineSwitchMenuJS;
+  return searchEngineSwitchMenuJS;
 }
 
 /**
@@ -141,6 +141,17 @@ function renderDynamicDiv1(): string {
         'class="prevent-select"',
       ],
       "御剑于心，且听风吟。"
+    ) + element(
+      "script",
+      [],
+      `fetch('https://v1.hitokoto.cn')
+    .then(response => response.json())
+    .then(data => {
+      const hitokoto = document.querySelector('#hitokoto')
+      hitokoto.onclick = function onclick(event) {location.href = 'https://hitokoto.cn/?uuid=' + data.uuid;}
+      hitokoto.innerText = data.hitokoto
+    })
+    .catch(console.error)`
     )
   );
 

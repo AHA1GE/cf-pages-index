@@ -293,7 +293,7 @@ function renderDynamicDiv2(): string {
               "img",
               [
                 'class="card-favicon-top-left-float" alt="logo"',
-                `src=${composeFaviconGetterUri(`https://${url.match(/^https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i)?.[1] || ""}`, icon_size)}`
+                `src=${composeFaviconGetterUri(url, icon_size)}`
               ],
               ""
             ) +

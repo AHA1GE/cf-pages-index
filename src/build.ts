@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import { createHash } from 'crypto'
 import config from './configs.json' assert { type: "json" };;
 
 /**
@@ -24,6 +25,13 @@ function element(tag: string, attrs: string[], content: string): string {
 function headElement(tag: string, attrs: string[]): string {
   return `<${tag} ${attrs.join(" ")}>`;
 }
+
+function composeFaviconGetterUri(target: string, size: string): string {
+  const hashedTarget = createHash('md5').update(target).digest('hex');
+  const url = `${config.faviconGetter}/sz/${size}/url/${encodeURIComponent(target)}/hash/${hashedTarget}`;
+  return url;
+}
+
 
 function generateDynamicJS(): string {
   const hitokotoJS = `<script src="https://v1.hitokoto.cn/?encode=js&amp;select=%23hitokoto" defer=""></script>`
@@ -177,7 +185,7 @@ function renderDynamicDiv1(): string {
       [
         'id="search-fav"',
         'class="search-engine-favicon-top-left-float"',
-        `src="${config.faviconGetter}/url/${encodeURIComponent(`https://${config.search_engine[0].template.match(/^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i)?.[1] || ""}`)}"`,
+        `src="${composeFaviconGetterUri(`https://${config.search_engine[0].template.match(/^https?:\/\/(?:[^.]+\.)?([^.]+\.[a-z]{2,})/i)?.[1] || ""}`, "32")}"`,
         'alt="logo"',
       ],
       ""
@@ -274,7 +282,7 @@ function renderDynamicDiv2(): string {
               "img",
               [
                 'class="card-favicon-top-left-float" alt="logo"',
-                `src="${config.faviconGetter}/sz/${icon_size}/url/${encodeURIComponent(`https://${url.match(/^https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i)?.[1] || ""}`)}"`,
+                `src=${composeFaviconGetterUri(`https://${url.match(/^https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/i)?.[1] || ""}`, icon_size)}`
               ],
               ""
             ) +

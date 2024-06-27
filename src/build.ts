@@ -28,7 +28,7 @@ function headElement(tag: string, attrs: string[]): string {
 
 function composeFaviconGetterUri(target: string, size: string): string {
   const hashedTarget = createHash('md5').update(target).digest('hex');
-  const url = `${config.faviconGetter}/sz/${size}/url/${encodeURIComponent(target)}/${hashedTarget}.ico`;
+  const url = `${config.faviconGetter}/sz/${size}/url/${encodeURIComponent(target)}/${hashedTarget}.webp`;
   return url;
 }
 

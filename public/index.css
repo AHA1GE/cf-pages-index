@@ -145,7 +145,7 @@
         font-size: 0.95rem;
         font-weight: normal;
         padding-left: 3rem;
-        color: rgb(130, 130, 130);
+        color: rgb(135, 135, 135);
     }
 
     div.search-engine-wrapper {
@@ -263,6 +263,7 @@
     }
 
     div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
+        color: rgb(255, 255, 255);
         flex: 0 0 auto;
         padding-left: 1.5rem;
         padding-top: .6rem;

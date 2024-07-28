@@ -97,15 +97,15 @@
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://next.dofor.fun/",
-                    "name": "NextChat",
-                    "desc": "Basic chatGPT-like webui",
-                    "icon_size": "90"
-                },
-                {
                     "url": "https://vno.dofor.fun/",
                     "name": "Vnology",
                     "desc": "Go to Virtual Synology NAS",
+                    "icon_size": "90"
+                },
+                {
+                    "url": "https://nextcloud.dofor.fun/",
+                    "name": "NextCloud",
+                    "desc": "Go to NextCloud on rpi3b (tunneled)",
                     "icon_size": "90"
                 }
             ]
@@ -121,6 +121,12 @@
                     "icon_size": "90"
                 },
                 {
+                    "url": "https://next.dofor.fun/",
+                    "name": "NextChat",
+                    "desc": "Basic chatGPT-like webui",
+                    "icon_size": "90"
+                },
+                {
                     "url": "https://chat.openai.com/",
                     "name": "ChatGPT",
                     "desc": "ChatGPT by OpenAI",
@@ -130,12 +136,6 @@
                     "url": "https://reader.aha1.top/",
                     "name": "Reader",
                     "desc": "Read novels online for free",
-                    "icon_size": "90"
-                },
-                {
-                    "url": "https://it-tools.tech/",
-                    "name": "IT Tools",
-                    "desc": "Data convertion tools",
                     "icon_size": "90"
                 }
             ]

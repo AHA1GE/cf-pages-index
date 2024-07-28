@@ -121,15 +121,15 @@
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://next.dofor.fun/",
-                    "name": "NextChat",
-                    "desc": "Basic chatGPT-like webui",
-                    "icon_size": "90"
-                },
-                {
                     "url": "https://chat.openai.com/",
                     "name": "ChatGPT",
                     "desc": "ChatGPT by OpenAI",
+                    "icon_size": "90"
+                },
+                {
+                    "url": "https://next.aha1.top/",
+                    "name": "NextChat",
+                    "desc": "Basic chatGPT-like webui",
                     "icon_size": "90"
                 },
                 {

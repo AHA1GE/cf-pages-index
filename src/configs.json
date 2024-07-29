@@ -98,14 +98,14 @@
                 },
                 {
                     "url": "https://vno.dofor.fun/",
-                    "name": "Vnology",
-                    "desc": "Go to Virtual Synology NAS",
+                    "name": "Vnology tunneled",
+                    "desc": "Go to Virtual Synology NAS (tunneled)",
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://nextcloud.dofor.fun/",
-                    "name": "NextCloud",
-                    "desc": "Go to NextCloud on rpi3b (tunneled)",
+                    "url": "https://sf.dofor.fun/",
+                    "name": "seaFile",
+                    "desc": "Go to seaFile on rpi3b (proxied)",
                     "icon_size": "90"
                 }
             ]

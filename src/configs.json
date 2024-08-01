@@ -103,9 +103,9 @@
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://sf.dofor.fun/",
+                    "url": "https://goseafile.dofor.fun/",
                     "name": "seaFile",
-                    "desc": "Go to seaFile on rpi3b (proxied)",
+                    "desc": "Go to seaFile on rpi3b (auto choose connection)",
                     "icon_size": "90"
                 }
             ]

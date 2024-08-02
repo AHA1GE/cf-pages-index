@@ -99,13 +99,13 @@
                 {
                     "url": "https://vno.dofor.fun/",
                     "name": "Vnology tunneled",
-                    "desc": "Go to Virtual Synology NAS (tunneled)",
+                    "desc": "Go to Virtual Synology NAS",
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://goseafile.dofor.fun/",
-                    "name": "seaFile",
-                    "desc": "Go to seaFile on rpi3b (auto choose connection)",
+                    "url": "https://vnology.dofor.fun/",
+                    "name": "Vnology",
+                    "desc": "Go to Virtual Synology NAS (tunneled)",
                     "icon_size": "90"
                 }
             ]

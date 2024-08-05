@@ -98,13 +98,13 @@
                 },
                 {
                     "url": "https://vno.dofor.fun/",
-                    "name": "Vnology tunneled",
+                    "name": "Vnology",
                     "desc": "Go to Virtual Synology NAS",
                     "icon_size": "90"
                 },
                 {
                     "url": "https://vnology.dofor.fun/",
-                    "name": "Vnology",
+                    "name": "Vnology tunneled",
                     "desc": "Go to Virtual Synology NAS (tunneled)",
                     "icon_size": "90"
                 }

@@ -99,13 +99,13 @@
                 {
                     "url": "https://vno.dofor.fun/",
                     "name": "Vnology",
-                    "desc": "Go to Virtual Synology NAS",
+                    "desc": "Virtual Synology NAS",
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://vnology.dofor.fun/",
-                    "name": "Vnology tunneled",
-                    "desc": "Go to Virtual Synology NAS (tunneled)",
+                    "url": "https://feiniu.dofor.fun/",
+                    "name": "飞牛OS",
+                    "desc": "国产飞牛NAS操作系统",
                     "icon_size": "90"
                 }
             ]

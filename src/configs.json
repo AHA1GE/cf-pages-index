@@ -33,13 +33,13 @@
                 {
                     "url": "https://mb.aha1.top/",
                     "name": "Message Board",
-                    "desc": "Leave me a message",
+                    "desc": "Post messages",
                     "icon_size": "90"
                 },
                 {
                     "url": "https://v.ahaigege.com/",
-                    "name": "Lobe",
-                    "desc": "Lobe on Vercel",
+                    "name": "Lobechat",
+                    "desc": "Lobechat on Vercel",
                     "icon_size": "90"
                 },
                 {
@@ -87,25 +87,25 @@
                 {
                     "url": "https://apps.dofor.fun/",
                     "name": "Launcher",
-                    "desc": "Apps launcher",
-                    "icon_size": "90"
-                },
-                {
-                    "url": "https://oneapi.dofor.fun/",
-                    "name": "One Api",
-                    "desc": "Api relay for GPTs",
-                    "icon_size": "90"
-                },
-                {
-                    "url": "https://gpt.dofor.fun/",
-                    "name": "China GPT",
-                    "desc": "China LLMs in lobe-chat",
+                    "desc": "CF apps launcher",
                     "icon_size": "90"
                 },
                 {
                     "url": "https://feiniu.dofor.fun/",
                     "name": "飞牛OS",
-                    "desc": "国产飞牛NAS操作系统",
+                    "desc": "Try The 飞牛 NAS OS from China",
+                    "icon_size": "90"
+                },
+                {
+                    "url": "https://next.aha1.top/",
+                    "name": "NextChat",
+                    "desc": "Basic chatGPT-like webui",
+                    "icon_size": "90"
+                },
+                {
+                    "url": "https://reader.aha1.top/",
+                    "name": "Reader",
+                    "desc": "Read novels online for free",
                     "icon_size": "90"
                 }
             ]
@@ -127,15 +127,15 @@
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://next.aha1.top/",
-                    "name": "NextChat",
-                    "desc": "Basic chatGPT-like webui",
+                    "url": "https://centralops.net/co/",
+                    "name": "centralops",
+                    "desc": "Free online network tools",
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://reader.aha1.top/",
-                    "name": "Reader",
-                    "desc": "Read novels online for free",
+                    "url": "https://suburl.v1.mk/",
+                    "name": "sub converter",
+                    "desc": "Free online subscribtion convert tool",
                     "icon_size": "90"
                 }
             ]

@@ -17,8 +17,7 @@ export function onRequest(context) {
     // - "/index" (no extension)
     // - "/index.<ext>" (any extension, e.g., .html, .htm)
     if (!/^\/(index(\.[a-z0-9]+)?)?$/i.test(pathname)) {
-        context.next();
-        return;
+        return context.next();
     }
 
     // Default response language is English.
@@ -40,5 +39,6 @@ export function onRequest(context) {
 
     // Serve the appropriate file.
     const fileName = responseLang === defaultLang ? 'index.html' : `index-${responseLang}.html`;
-    context.serveFile(fileName);
+    url.pathname = `/${fileName}`;
+    return fetch(url.toString(), request);
 }

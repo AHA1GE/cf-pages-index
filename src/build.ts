@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { createHash } from 'crypto'
-import config from './configs.json' assert { type: "json" };;
+const config = JSON.parse(fs.readFileSync('./src/configs.json', 'utf-8'));
 
 const langs = config.langs;
 
@@ -251,7 +251,7 @@ function renderDynamicDiv1(lang: string): string {
     "div",
     ['id="sengine"', 'class="search-engine-switch-menu prevent-select"'],
     config.search_engine
-      .map((link, key) => {
+      .map((link: any, key: any) => {
         if (key == 0) {
           return element(
             "button",
@@ -287,7 +287,7 @@ function renderDynamicDiv1(lang: string): string {
  **/
 function renderDynamicDiv2(lang: string): string {
   var main = config.quickLinkLists
-    .map((item) => {
+    .map((item: any) => {
       const card = (
         url: string,
         name: string,
@@ -322,7 +322,7 @@ function renderDynamicDiv2(lang: string): string {
         "div",
         ['class="four-stackable-cards"'],
         item.quickLinkList
-          .map((link) => {
+          .map((link: any) => {
             return card(link.url, multiLang(lang, link.name), multiLang(lang, link.desc), link.icon_size);
           })
           .join("")
@@ -424,7 +424,7 @@ async function buildLangs() {
     const publicDir = path.join('public');
     await fs.ensureDir(publicDir);
     const htmlContent = await renderHTML(lang);
-    await fs.writeFile(path.join(publicDir, `${lang}.html`), htmlContent, 'utf8');
+    await fs.writeFile(path.join(publicDir, `index-${lang}.html`), htmlContent, 'utf8');
   }
 }
 

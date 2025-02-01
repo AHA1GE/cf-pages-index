@@ -39,6 +39,6 @@ export function onRequest(context) {
     }
 
     // Serve the appropriate file.
-    const fileName = responseLang === defaultLang ? 'index.html' : `${responseLang}.html`;
+    const fileName = responseLang === defaultLang ? 'index.html' : `index-${responseLang}.html`;
     context.serveFile(fileName);
 }

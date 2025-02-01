@@ -130,5 +130,5 @@ dist
 .pnp.*
 
 # generated
-.public/*
-.building/*
+public
+building

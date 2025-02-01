@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "use cloudflare pages to serve index",
   "type": "module",
-  "main": "dist/build.js",
+  "main": "building/build.js",
   "scripts": {
-    "build": "tsc && node dist/build.js",
-    "test": "tsc && node dist/build.js"
+    "build": "tsc && node building/build.js",
+    "test": "tsc && node building/build.js"
   },
   "keywords": [],
   "author": "",

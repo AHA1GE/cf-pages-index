@@ -1,16 +1,19 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { createHash } from 'crypto'
-const config = JSON.parse(fs.readFileSync('./src/configs.json', 'utf-8'));
+import config from './configs.js';
 
 const langs = config.langs;
 
 function multiLang(lang: string, obj: any): string {
   // Return the value for the given language, or fallback to the default if not available.
+  console.log('user want ' + lang);
   try {
-    return obj[lang] || obj.default;
+    console.log('return to user:' + obj[lang]);
+    return obj[lang];
   } catch (e) {
-    return obj.toString();
+    console.error('Error during multiLang:', e);
+    return obj['en-us'];
   }
 }
 
@@ -104,7 +107,7 @@ function generateStaticHTML(lang: string): string {
  * 生成head的函数
  * @returns {string} 以字符串返回的head
  */
-async function generateDynamicHead(): Promise<string> {
+async function generateDynamicHead(lang: string): Promise<string> {
   const headList: string[] = [
     "<head>",
     headElement("meta", ['charset="UTF-8"']),
@@ -116,7 +119,7 @@ async function generateDynamicHead(): Promise<string> {
       'name="viewport" content="width=device-width, initial-scale=1.0"',
     ]),
     headElement("meta", ['http-equiv="X-UA-Compatible" content="ie=edge"']),
-    element("title", [], `${config.title} - ${config.subtitle}`),
+    element("title", [], `${multiLang(lang, config.title)} - ${multiLang(lang, config.subtitle)}`),
     headElement("link", [
       'rel="apple-touch-icon"',
       'sizes="180x180"',
@@ -272,7 +275,7 @@ function renderDynamicDiv1(lang: string): string {
     element(
       "div",
       ['id="head"', 'class="head-container"'],
-      multiLang(lang, title)
+      title
     )
   ) + element(
     "div",
@@ -308,8 +311,8 @@ function renderDynamicDiv2(lang: string): string {
               ],
               ""
             ) +
-            element("div", ['class="header"'], multiLang(lang, name)) +
-            element("div", ['class="meta"'], multiLang(lang, desc))
+            element("div", ['class="header"'], name) +
+            element("div", ['class="meta"'], desc)
           )
         );
       const divider = element(
@@ -393,7 +396,7 @@ function renderDynamicDiv3(): string {
  **/
 async function renderHTML(lang: string): Promise<string> {
   const staticHTML: string = generateStaticHTML(lang);
-  const dynamicHead: string = await generateDynamicHead();
+  const dynamicHead: string = await generateDynamicHead(lang);
   const dynamicDiv1: string = renderDynamicDiv1(lang);
   const dynamicDiv2: string = renderDynamicDiv2(lang);
   const dynamicDiv3: string = renderDynamicDiv3();

@@ -3,6 +3,17 @@ import path from 'path';
 import { createHash } from 'crypto'
 import config from './configs.json' assert { type: "json" };;
 
+const langs = config.langs;
+
+function multiLang(lang: string, obj: any): string {
+  // Return the value for the given language, or fallback to the default if not available.
+  try {
+    return obj[lang] || obj.default;
+  } catch (e) {
+    return obj.toString();
+  }
+}
+
 /**
  * 用来创建element的工具函数
  * @param tag 标签名
@@ -73,10 +84,10 @@ function generateDynamicJS(): string {
  * 生成 HTML 静态部分的函数
  * @returns {string}  以字符串返回的静态部分的页面
  **/
-function generateStaticHTML(): string {
+function generateStaticHTML(lang: string): string {
   return `
       <!DOCTYPE html>
-      <html lang="en">
+      <html lang="${lang}">
         <head src="/dynamicHeads.html"></head>
         <body>
           <header></header>
@@ -126,7 +137,7 @@ async function generateDynamicHead(): Promise<string> {
  * 渲染第一个动态 div 的函数
  * @returns {string} 以字符串返回的第一个Div
  **/
-function renderDynamicDiv1(): string {
+function renderDynamicDiv1(lang: string): string {
   const item = (template: string, name: string) =>
     element("button", ['class="item"', `data-url="${template}"`], name);
 
@@ -179,7 +190,7 @@ function renderDynamicDiv1(): string {
     element(
       "div",
       ['class="title"'],
-      config.title + element("div", ['class="sub-title"'], config.subtitle)
+      multiLang(lang, config.title) + element("div", ['class="sub-title"'], multiLang(lang, config.subtitle))
     )
   );
 
@@ -245,10 +256,10 @@ function renderDynamicDiv1(): string {
           return element(
             "button",
             ['class="active item"', `data-url="${link.template}"`],
-            link.name
+            multiLang(lang, link.name)
           );
         } else {
-          return item(link.template, link.name);
+          return item(link.template, multiLang(lang, link.name));
         }
       })
       .join("")
@@ -261,7 +272,7 @@ function renderDynamicDiv1(): string {
     element(
       "div",
       ['id="head"', 'class="head-container"'],
-      title
+      multiLang(lang, title)
     )
   ) + element(
     "div",
@@ -274,7 +285,7 @@ function renderDynamicDiv1(): string {
  * 渲染第二个动态 div 的函数
  * @returns {string} 以字符串返回的第二个Div
  **/
-function renderDynamicDiv2(): string {
+function renderDynamicDiv2(lang: string): string {
   var main = config.quickLinkLists
     .map((item) => {
       const card = (
@@ -297,14 +308,14 @@ function renderDynamicDiv2(): string {
               ],
               ""
             ) +
-            element("div", ['class="header"'], name) +
-            element("div", ['class="meta"'], desc)
+            element("div", ['class="header"'], multiLang(lang, name)) +
+            element("div", ['class="meta"'], multiLang(lang, desc))
           )
         );
       const divider = element(
         "h2",
         ['class="horizontal-divider"'],
-        element("i", ['class="quicklink-icon"'], item.icon) + item.name
+        element("i", ['class="quicklink-icon"'], item.icon) + multiLang(lang, item.name)
       );
 
       var content = element(
@@ -312,7 +323,7 @@ function renderDynamicDiv2(): string {
         ['class="four-stackable-cards"'],
         item.quickLinkList
           .map((link) => {
-            return card(link.url, link.name, link.desc, link.icon_size);
+            return card(link.url, multiLang(lang, link.name), multiLang(lang, link.desc), link.icon_size);
           })
           .join("")
       );
@@ -380,11 +391,11 @@ function renderDynamicDiv3(): string {
  * @returns {string}  以字符串返回的页面
  * @description 该函数会生成一个 HTML 页面。
  **/
-async function renderHTML(): Promise<string> {
-  const staticHTML: string = generateStaticHTML();
+async function renderHTML(lang: string): Promise<string> {
+  const staticHTML: string = generateStaticHTML(lang);
   const dynamicHead: string = await generateDynamicHead();
-  const dynamicDiv1: string = renderDynamicDiv1();
-  const dynamicDiv2: string = renderDynamicDiv2();
+  const dynamicDiv1: string = renderDynamicDiv1(lang);
+  const dynamicDiv2: string = renderDynamicDiv2(lang);
   const dynamicDiv3: string = renderDynamicDiv3();
   const dynamicJS: string = generateDynamicJS();
   let html = staticHTML
@@ -398,17 +409,29 @@ async function renderHTML(): Promise<string> {
 }
 
 // Ensure the public directory exists and write the HTML file
-async function build() {
+async function buildDefault() {
   const publicDir = path.join('public');
   await fs.ensureDir(publicDir);
 
-  const htmlContent = await renderHTML();
+  const htmlContent = await renderHTML("default");
   await fs.writeFile(path.join(publicDir, 'index.html'), htmlContent, 'utf8');
 
   console.log('Static HTML generated successfully.');
 }
 
+async function buildLangs() {
+  for (const lang of langs) {
+    const publicDir = path.join('public');
+    await fs.ensureDir(publicDir);
+    const htmlContent = await renderHTML(lang);
+    await fs.writeFile(path.join(publicDir, `${lang}.html`), htmlContent, 'utf8');
+  }
+}
+
 // Run the build process
-build().catch(err => {
-  console.error('Error during build process:', err);
+buildDefault().catch(err => {
+  console.error('Error during build defult(English) page:', err);
+});
+buildLangs().catch(err => {
+  console.error('Error during build multi-lang pages:', err);
 });

@@ -412,8 +412,9 @@ async function buildLangs() {
   await fs.writeFile(path.join('public', 'index.html'), await renderHTML('en-us'), 'utf8'); // Build the default language first
   for (const lang of langs) {
     const publicDir = path.join('public');
-    await fs.ensureDir(publicDir);
     const htmlContent = await renderHTML(lang);
+    // Create the language directory and write the HTML file
+    await fs.ensureDir(path.join(publicDir, lang));
     await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
   }
 }

@@ -1,42 +1,34 @@
 // Use a Set for fast membership checking.
 const langs = new Set([
-    // List of supported languages, more to add
-    'cn',
-    'default' // default is English
+    'zh-cn', 'en-us'
 ]);
 
 export function onRequest(context) {
     const request = context.request;
-    // Extract the pathname from the URL.
+    // Extract the pathname from the URL and normalize it to lowercase.
     const url = new URL(request.url);
-    const pathname = url.pathname;
+    const pathname = url.pathname.toLowerCase();
 
-    // Use a regex to check for root "/" or "/index" with optional extension.
-    // This regex matches:
-    // - "/" (root)
-    // - "/index" (no extension)
-    // - "/index.<ext>" (any extension, e.g., .html, .htm)
-    if (!/^\/(index(\.[a-z0-9]+)?)?$/i.test(pathname)) {
+    // Use a stricter regex to check for root "/" or "/index" with optional extension.
+    if (!/^\/(index(?:\.[a-z0-9]+)?)?$/i.test(pathname)) {
         return context.next();
     }
 
-    // Default response language is English.
-    const defaultLang = 'default';
-    let responseLang = defaultLang;
-
     // Get the accept-language header (if available).
-    const acceptLanguage = request.headers['accept-language'] || '';
+    const acceptLanguage = request.headers.get('accept-language') || '';
 
     // Split the header by commas and remove any quality factors (e.g., ";q=0.8")
-    const userLangs = acceptLanguage.split(',')
-        .map(lang => lang.split(';')[0].trim().toLowerCase());
+    const userLangs = acceptLanguage
+        ? acceptLanguage.split(',').map(lang => lang.split(';')[0].trim().toLowerCase())
+        : [];
 
-    // Find the first language that is supported (excluding 'default').
-    const foundLang = userLangs.find(lang => langs.has(lang) && lang !== defaultLang);
+    // Find the first supported language (including partial matches).
+    const foundLang = userLangs.find(lang => langs.has(lang)) ||
+        userLangs.find(lang => [...langs].some(l => l.startsWith(lang)));
+
     if (foundLang) {
-        responseLang = foundLang;
+        return Response.redirect(`/${foundLang}/index.html`, 302);
+    } else {
+        return Response.redirect(`/index.html`, 302);
     }
-
-    // redirect to the correct language ie: /cn/index.html
-    return Response.redirect(`/${responseLang}/index.html`, 302);
 }

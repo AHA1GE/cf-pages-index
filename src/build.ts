@@ -409,15 +409,12 @@ async function renderHTML(lang: string): Promise<string> {
 }
 
 async function buildLangs() {
+  await fs.writeFile(path.join('public', 'index.html'), await renderHTML('en-us'), 'utf8'); // Build the default language first
   for (const lang of langs) {
     const publicDir = path.join('public');
     await fs.ensureDir(publicDir);
     const htmlContent = await renderHTML(lang);
-    if (lang === 'default') {
-      await fs.writeFile(path.join(publicDir, 'index.html'), htmlContent, 'utf8');
-    } else {
-      await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
-    }
+    await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
   }
 }
 

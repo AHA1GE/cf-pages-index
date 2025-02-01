@@ -37,8 +37,6 @@ export function onRequest(context) {
         responseLang = foundLang;
     }
 
-    // Serve the appropriate file.
-    const fileName = responseLang === defaultLang ? 'index.html' : `index-${responseLang}.html`;
-    url.pathname = `/${fileName}`;
-    return fetch(url.toString(), request);
+    // redirect to the correct language ie: /cn/index.html
+    return Response.redirect(`/${responseLang}/index.html`, 302);
 }

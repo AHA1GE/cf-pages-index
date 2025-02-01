@@ -408,30 +408,20 @@ async function renderHTML(lang: string): Promise<string> {
   return html;
 }
 
-// Ensure the public directory exists and write the HTML file
-async function buildDefault() {
-  const publicDir = path.join('public');
-  await fs.ensureDir(publicDir);
-
-  const htmlContent = await renderHTML("default");
-  await fs.writeFile(path.join(publicDir, 'index.html'), htmlContent, 'utf8');
-
-  console.log('Static HTML generated successfully.');
-}
-
 async function buildLangs() {
   for (const lang of langs) {
     const publicDir = path.join('public');
     await fs.ensureDir(publicDir);
     const htmlContent = await renderHTML(lang);
-    await fs.writeFile(path.join(publicDir, `index-${lang}.html`), htmlContent, 'utf8');
+    if (lang === 'default') {
+      await fs.writeFile(path.join(publicDir, 'index.html'), htmlContent, 'utf8');
+    } else {
+      await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
+    }
   }
 }
 
 // Run the build process
-buildDefault().catch(err => {
-  console.error('Error during build defult(English) page:', err);
-});
 buildLangs().catch(err => {
   console.error('Error during build multi-lang pages:', err);
 });

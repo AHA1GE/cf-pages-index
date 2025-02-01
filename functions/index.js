@@ -27,8 +27,12 @@ export function onRequest(context) {
         userLangs.find(lang => [...langs].some(l => l.startsWith(lang)));
 
     if (foundLang) {
-        return Response.redirect(`/${foundLang}/index.html`, 302);
+        // Parse URL as proto://host/${foundLang}/file.ext
+        url.pathname = `/${foundLang}${pathname}`;
+        // Redirect to the new URL.
+        return Response.redirect(url.toString(), 302);
     } else {
-        return Response.redirect(`/index.html`, 302);
+        // No supported language found, redirect to the default index.html.
+        return Response.redirect(url.origin + '/index.html', 302);
     }
 }

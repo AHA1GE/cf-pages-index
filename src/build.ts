@@ -408,10 +408,13 @@ async function renderHTML(lang: string): Promise<string> {
   return html;
 }
 
+async function copyStaticFiles() {
+  await fs.copy('src/public-static', publicDir);
+}
+
 async function buildLangs() {
   await fs.writeFile(path.join('public', 'index.html'), await renderHTML('en-us'), 'utf8'); // Build the default language first
   for (const lang of langs) {
-    const publicDir = path.join('public');
     const htmlContent = await renderHTML(lang);
     // Create the language directory and write the HTML file
     await fs.ensureDir(path.join(publicDir, lang));
@@ -420,6 +423,11 @@ async function buildLangs() {
 }
 
 // Run the build process
+const publicDir = path.join('public');
+await fs.ensureDir(publicDir);
+copyStaticFiles().catch(err => {
+  console.error('Error during copy static files:', err);
+});
 buildLangs().catch(err => {
   console.error('Error during build multi-lang pages:', err);
 });

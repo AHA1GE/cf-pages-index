@@ -7,12 +7,9 @@ const langs = config.langs;
 
 function multiLang(lang: string, obj: any): string {
   // Return the value for the given language, or fallback to the default if not available.
-  console.log('user want ' + lang);
   try {
-    console.log('return to user:' + obj[lang]);
     return obj[lang];
   } catch (e) {
-    console.error('Error during multiLang:', e);
     return obj['en-us'];
   }
 }

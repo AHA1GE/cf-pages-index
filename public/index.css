@@ -23,6 +23,10 @@
             color: #222222;
         }
 
+        div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
+            color: #222222;
+        }
+
         div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card {
             color: #222222;
             background-color: rgba(10, 10, 10, 0.2);
@@ -43,6 +47,10 @@
         /* Dark mode CSS styles */
         body {
             background-color: #222222;
+            color: #f1f1f1;
+        }
+
+        div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
             color: #f1f1f1;
         }
 

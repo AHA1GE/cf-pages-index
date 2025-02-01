@@ -129,5 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# generated html
-public/index.html
+# generated
+.public/*
+.building/*

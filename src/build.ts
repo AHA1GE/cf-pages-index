@@ -1,7 +1,18 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { createHash } from 'crypto'
-import config from './configs.json' assert { type: "json" };;
+import config from './configs.js';
+
+const langs = config.langs;
+
+function multiLang(lang: string, obj: any): string {
+  // Return the value for the given language, or fallback to the default if not available.
+  try {
+    return obj[lang];
+  } catch (e) {
+    return obj['en-us'];
+  }
+}
 
 /**
  * 用来创建element的工具函数
@@ -73,10 +84,10 @@ function generateDynamicJS(): string {
  * 生成 HTML 静态部分的函数
  * @returns {string}  以字符串返回的静态部分的页面
  **/
-function generateStaticHTML(): string {
+function generateStaticHTML(lang: string): string {
   return `
       <!DOCTYPE html>
-      <html lang="en">
+      <html lang="${lang}">
         <head src="/dynamicHeads.html"></head>
         <body>
           <header></header>
@@ -93,7 +104,7 @@ function generateStaticHTML(): string {
  * 生成head的函数
  * @returns {string} 以字符串返回的head
  */
-async function generateDynamicHead(): Promise<string> {
+async function generateDynamicHead(lang: string): Promise<string> {
   const headList: string[] = [
     "<head>",
     headElement("meta", ['charset="UTF-8"']),
@@ -105,7 +116,7 @@ async function generateDynamicHead(): Promise<string> {
       'name="viewport" content="width=device-width, initial-scale=1.0"',
     ]),
     headElement("meta", ['http-equiv="X-UA-Compatible" content="ie=edge"']),
-    element("title", [], `${config.title} - ${config.subtitle}`),
+    element("title", [], `${multiLang(lang, config.title)} - ${multiLang(lang, config.subtitle)}`),
     headElement("link", [
       'rel="apple-touch-icon"',
       'sizes="180x180"',
@@ -126,7 +137,7 @@ async function generateDynamicHead(): Promise<string> {
  * 渲染第一个动态 div 的函数
  * @returns {string} 以字符串返回的第一个Div
  **/
-function renderDynamicDiv1(): string {
+function renderDynamicDiv1(lang: string): string {
   const item = (template: string, name: string) =>
     element("button", ['class="item"', `data-url="${template}"`], name);
 
@@ -179,7 +190,7 @@ function renderDynamicDiv1(): string {
     element(
       "div",
       ['class="title"'],
-      config.title + element("div", ['class="sub-title"'], config.subtitle)
+      multiLang(lang, config.title) + element("div", ['class="sub-title"'], multiLang(lang, config.subtitle))
     )
   );
 
@@ -240,15 +251,15 @@ function renderDynamicDiv1(): string {
     "div",
     ['id="sengine"', 'class="search-engine-switch-menu prevent-select"'],
     config.search_engine
-      .map((link, key) => {
+      .map((link: any, key: any) => {
         if (key == 0) {
           return element(
             "button",
             ['class="active item"', `data-url="${link.template}"`],
-            link.name
+            multiLang(lang, link.name)
           );
         } else {
-          return item(link.template, link.name);
+          return item(link.template, multiLang(lang, link.name));
         }
       })
       .join("")
@@ -274,9 +285,9 @@ function renderDynamicDiv1(): string {
  * 渲染第二个动态 div 的函数
  * @returns {string} 以字符串返回的第二个Div
  **/
-function renderDynamicDiv2(): string {
+function renderDynamicDiv2(lang: string): string {
   var main = config.quickLinkLists
-    .map((item) => {
+    .map((item: any) => {
       const card = (
         url: string,
         name: string,
@@ -304,15 +315,15 @@ function renderDynamicDiv2(): string {
       const divider = element(
         "h2",
         ['class="horizontal-divider"'],
-        element("i", ['class="quicklink-icon"'], item.icon) + item.name
+        element("i", ['class="quicklink-icon"'], item.icon) + multiLang(lang, item.name)
       );
 
       var content = element(
         "div",
         ['class="four-stackable-cards"'],
         item.quickLinkList
-          .map((link) => {
-            return card(link.url, link.name, link.desc, link.icon_size);
+          .map((link: any) => {
+            return card(link.url, multiLang(lang, link.name), multiLang(lang, link.desc), link.icon_size);
           })
           .join("")
       );
@@ -380,11 +391,11 @@ function renderDynamicDiv3(): string {
  * @returns {string}  以字符串返回的页面
  * @description 该函数会生成一个 HTML 页面。
  **/
-async function renderHTML(): Promise<string> {
-  const staticHTML: string = generateStaticHTML();
-  const dynamicHead: string = await generateDynamicHead();
-  const dynamicDiv1: string = renderDynamicDiv1();
-  const dynamicDiv2: string = renderDynamicDiv2();
+async function renderHTML(lang: string): Promise<string> {
+  const staticHTML: string = generateStaticHTML(lang);
+  const dynamicHead: string = await generateDynamicHead(lang);
+  const dynamicDiv1: string = renderDynamicDiv1(lang);
+  const dynamicDiv2: string = renderDynamicDiv2(lang);
   const dynamicDiv3: string = renderDynamicDiv3();
   const dynamicJS: string = generateDynamicJS();
   let html = staticHTML
@@ -397,18 +408,26 @@ async function renderHTML(): Promise<string> {
   return html;
 }
 
-// Ensure the public directory exists and write the HTML file
-async function build() {
-  const publicDir = path.join('public');
-  await fs.ensureDir(publicDir);
+async function copyStaticFiles() {
+  await fs.copy('src/public-static', publicDir);
+}
 
-  const htmlContent = await renderHTML();
-  await fs.writeFile(path.join(publicDir, 'index.html'), htmlContent, 'utf8');
-
-  console.log('Static HTML generated successfully.');
+async function buildLangs() {
+  await fs.writeFile(path.join('public', 'index.html'), await renderHTML('en-us'), 'utf8'); // Build the default language first
+  for (const lang of langs) {
+    const htmlContent = await renderHTML(lang);
+    // Create the language directory and write the HTML file
+    await fs.ensureDir(path.join(publicDir, lang));
+    await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
+  }
 }
 
 // Run the build process
-build().catch(err => {
-  console.error('Error during build process:', err);
+const publicDir = path.join('public');
+await fs.ensureDir(publicDir);
+copyStaticFiles().catch(err => {
+  console.error('Error during copy static files:', err);
+});
+buildLangs().catch(err => {
+  console.error('Error during build multi-lang pages:', err);
 });

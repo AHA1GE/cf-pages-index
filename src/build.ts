@@ -394,7 +394,7 @@ function renderDynamicDiv3(lang: string): string {
       ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],
       icpText
     );
-    const gonganText = "浙公网安备 带备案 号";
+    const gonganText = "浙公网安备 待备案 号";
     const gonganLinkElement = element(
       "a",
       ['class="label"', 'href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009357"', 'target="_blank"', 'rel="noreferrer noopener"'],

@@ -388,7 +388,7 @@ function renderDynamicDiv3(lang: string): string {
     );
   } else {
     // lang is "zh-cn", replace the footer with ICP and GongAn
-    const icpText = "浙ICP备2025149280号-1";
+    const icpText = "浙ICP备2025149280号";
     const icpLinkElement = element(
       "a",
       ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],

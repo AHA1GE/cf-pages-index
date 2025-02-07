@@ -348,42 +348,69 @@ function renderDynamicDiv2(lang: string): string {
  * 渲染第三个动态 div 的函数
  * @returns {string} 以字符串返回的第三个Div，也就是footer
  **/
-function renderDynamicDiv3(): string {
-  return element(
-    "footer",
-    ['class="footer"'],
-    element(
-      "div",
-      ['class="footer-div"'],
-      "Powered by " +
+function renderDynamicDiv3(lang: string): string {
+  if (lang !== "zh-cn") {
+    // lang is not "zh-cn", use the default footer
+    return element(
+      "footer",
+      ['class="footer"'],
       element(
-        "a",
-        [
-          'class="label"',
-          'href="https://github.com/AHA1GE/cf-pages-index"',
-          'target="_blank"',
-          'rel="noreferrer noopener"',
-        ],
+        "div",
+        ['class="footer-div"'],
+        "Powered by " +
         element(
-          "i",
-          ['class="github-icon"'],
+          "a",
+          [
+            'class="label"',
+            'href="https://github.com/AHA1GE/cf-pages-index"',
+            'target="_blank"',
+            'rel="noreferrer noopener"',
+          ],
           element(
-            "svg",
-            [
-              'xmlns="http://www.w3.org/2000/svg"',
-              'width="1em"',
-              'height="1em"',
-              'fill="currentColor"',
-              'viewBox="0 0 16 16"',
-            ],
-            headElement("path", [
-              'd="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"',
-            ])
-          )
-        ) + "&nbspCFPI"
+            "i",
+            ['class="github-icon"'],
+            element(
+              "svg",
+              [
+                'xmlns="http://www.w3.org/2000/svg"',
+                'width="1em"',
+                'height="1em"',
+                'fill="currentColor"',
+                'viewBox="0 0 16 16"',
+              ],
+              headElement("path", [
+                'd="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"',
+              ])
+            )
+          ) + "&nbspCFPI"
+        )
+      )
+    );
+  } else {
+    // lang is "zh-cn", replace the footer with ICP and GongAn
+    const icpText = "浙ICP备2025149280号-1";
+    const icpLinkElement = element(
+      "a",
+      ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],
+      icpText
+    );
+    const gonganText = "浙公网安备 带备案 号";
+    const gonganLinkElement = element(
+      "a",
+      ['class="label"', 'href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009357"', 'target="_blank"', 'rel="noreferrer noopener"'],
+      gonganText
+    );
+    return element(
+      "footer",
+      ['class="footer"'],
+      element(
+        "div",
+        ['class="footer-div"'],
+        icpLinkElement + " | " + gonganLinkElement
       )
     )
-  );
+  }
+
 }
 
 /**
@@ -396,7 +423,7 @@ async function renderHTML(lang: string): Promise<string> {
   const dynamicHead: string = await generateDynamicHead(lang);
   const dynamicDiv1: string = renderDynamicDiv1(lang);
   const dynamicDiv2: string = renderDynamicDiv2(lang);
-  const dynamicDiv3: string = renderDynamicDiv3();
+  const dynamicDiv3: string = renderDynamicDiv3(lang);
   const dynamicJS: string = generateDynamicJS();
   let html = staticHTML
     .replace('<head src="/dynamicHeads.html"></head>', `${dynamicHead}`)

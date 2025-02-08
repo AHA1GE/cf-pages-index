@@ -437,6 +437,7 @@ async function renderHTML(lang: string): Promise<string> {
 
 async function copyStaticFiles() {
   await fs.copy('src/public-static', publicDir);
+  console.log('Static files copied successfully.');
 }
 
 async function buildLangs() {
@@ -447,11 +448,13 @@ async function buildLangs() {
     await fs.ensureDir(path.join(publicDir, lang));
     await fs.writeFile(path.join(publicDir, lang, 'index.html'), htmlContent, 'utf8');
   }
+  console.log('Multi-lang pages built successfully.');
 }
 
 // Run the build process
 const publicDir = path.join('public');
 await fs.ensureDir(publicDir);
+console.log('Public directory created successfully.');
 copyStaticFiles().catch(err => {
   console.error('Error during copy static files:', err);
 });

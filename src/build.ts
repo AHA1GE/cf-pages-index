@@ -397,7 +397,7 @@ function renderDynamicDiv3(lang: string): string {
     const gonganText = "浙公网安备 待备案 号";
     const gonganLinkElement = element(
       "a",
-      ['class="label"', 'href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802009357"', 'target="_blank"', 'rel="noreferrer noopener"'],
+      ['class="label"', 'href="https://beian.mps.gov.cn/#/query/webSearch?code="', 'target="_blank"', 'rel="noreferrer noopener"'],
       gonganText
     );
     return element(

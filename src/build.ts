@@ -388,17 +388,26 @@ function renderDynamicDiv3(lang: string): string {
     );
   } else {
     // lang is "zh-cn", replace the footer with ICP and GongAn
-    const icpText = "浙ICP备2025149280号";
     const icpLinkElement = element(
       "a",
       ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],
-      icpText
+      "浙ICP备2025149280号"
     );
-    const gonganText = "浙公网安备 待备案 号";
-    const gonganLinkElement = element(
-      "a",
-      ['class="label"', 'href="https://beian.mps.gov.cn/#/query/webSearch?code="', 'target="_blank"', 'rel="noreferrer noopener"'],
-      gonganText
+    const gonganLinkElement = element("p", ['class="label"'],
+      headElement(
+        "img",
+        [
+          'src="https://beian.mps.gov.cn/web/assets/logo01.6189a29f.png"',
+          'class="gongan-icon"',
+          'alt="公安联网备案图标"',
+          'style="width: 1em; height: 1em;"'
+        ]
+      ) +
+      element(
+        "a",
+        ['class="label"', 'href="https://beian.mps.gov.cn/#/query/webSearch?code=33010502012196"', 'target="_blank"', 'rel="noreferrer noopener"'],
+        "浙公网安备33010502012196号"
+      )
     );
     return element(
       "footer",

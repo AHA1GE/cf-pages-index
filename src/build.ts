@@ -393,7 +393,7 @@ function renderDynamicDiv3(lang: string): string {
       ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],
       "浙ICP备2025149280号"
     );
-    const gonganLinkElement = element("p", ['class="label"'],
+    const gonganLinkElement = element("span", [],
       headElement(
         "img",
         [

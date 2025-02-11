@@ -393,7 +393,14 @@ function renderDynamicDiv3(lang: string): string {
       ['class="label"', 'href="http://beian.miit.gov.cn/"', 'target="_blank"', 'rel="noreferrer noopener"'],
       "浙ICP备2025149280号"
     );
-    const gonganLinkElement = element("span", [],
+    const gonganLinkElement = element(
+      "a",
+      [
+        'class="label"',
+        'href="https://beian.mps.gov.cn/#/query/webSearch?code=33010502012196"',
+        'target="_blank"',
+        'rel="noreferrer noopener"'
+      ],
       headElement(
         "img",
         [
@@ -404,8 +411,8 @@ function renderDynamicDiv3(lang: string): string {
         ]
       ) +
       element(
-        "a",
-        ['class="label"', 'href="https://beian.mps.gov.cn/#/query/webSearch?code=33010502012196"', 'target="_blank"', 'rel="noreferrer noopener"'],
+        "span",
+        [],
         "浙公网安备33010502012196号"
       )
     );

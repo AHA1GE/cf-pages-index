@@ -179,7 +179,7 @@ const config = {
                         "en-us": "FN OS (NAS)",
                         "zh-cn": "网络附加存储装置飞牛操作系统"
                     },
-                    "icon_size": "90"
+                    "icon_size": "128"
                 },
                 {
                     "url": "https://exif-date-fix.dofor.fun/",

@@ -191,7 +191,7 @@ const config = {
                         "en-us": "fix picture with future-dated exif",
                         "zh-cn": "修复EXIF带有未来日期的图片"
                     },
-                    "icon_size": "90"
+                    "icon_size": "512"
                 },
                 {
                     "url": "https://reader.aha1.top/",

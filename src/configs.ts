@@ -170,7 +170,7 @@ const config = {
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://fn.dofor.fun/",
+                    "url": "https://fn.dofor.fun:5667/",
                     "name": {
                         "en-us": "FN OS",
                         "zh-cn": "飞牛系统"
@@ -182,14 +182,14 @@ const config = {
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://next.aha1.top/",
+                    "url": "https://exif-date-fix.dofor.fun/",
                     "name": {
-                        "en-us": "NextChat",
-                        "zh-cn": "NextChat"
+                        "en-us": "exif-date-fix",
+                        "zh-cn": "exif-date-fix"
                     },
                     "desc": {
-                        "en-us": "Basic chatGPT-like webui",
-                        "zh-cn": "类ChatGPT的基础webui"
+                        "en-us": "fix picture with future-dated exif",
+                        "zh-cn": "修复EXIF带有未来日期的图片"
                     },
                     "icon_size": "90"
                 },

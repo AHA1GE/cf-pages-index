@@ -44,7 +44,7 @@ function headElement(tag: string, attrs: string[]): string {
 
 function composeFaviconGetterUri(target: string, size: string): string {
   // the suffix busts browser caches (responses are immutable); bump the salt to force a refresh after worker changes
-  const hashedTarget = createHash('md5').update(target + ':v2').digest('hex');
+  const hashedTarget = createHash('md5').update(target + ':v3').digest('hex');
   const url = `${config.faviconGetter}/sz/${size}/url/${encodeURIComponent(target)}/${hashedTarget}.webp`;
   return url;
 }
@@ -303,17 +303,19 @@ function renderDynamicDiv2(lang: string): string {
         element(
           "a",
           ['class="card"', `href="${escapeHtml(url)}"`, 'target="_blank"', 'rel="noreferrer noopener"'],
-          element(
-            "div",
-            ['class="content"'],
             element(
-              "img",
-              [
-                'class="card-favicon-top-left-float" alt="logo"',
-                `src="${composeFaviconGetterUri(url, icon_size)}"`
-              ],
-              ""
-            ) +
+              "div",
+              ['class="content"'],
+              element(
+                "img",
+                [
+                  'class="card-favicon-top-left-float" alt="logo"',
+                  // crossorigin lets script.js read icon pixels to detect dark/light icons
+                  'crossorigin="anonymous"',
+                  `src="${composeFaviconGetterUri(url, icon_size)}"`
+                ],
+                ""
+              ) +
             element("div", ['class="header"'], name) +
             element("div", ['class="meta"'], desc)
           )

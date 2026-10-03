@@ -32,6 +32,11 @@
             background-color: rgba(10, 10, 10, 0.2);
         }
 
+        /* light icons are hard to see on the light card background */
+        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>img.card-favicon-top-left-float.icon-light {
+            background-color: #222222;
+        }
+
         ::-webkit-scrollbar-thumb {
             background-color: #cccccc;
             border-radius: 4px;
@@ -57,6 +62,11 @@
         div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card {
             color: #f1f1f1;
             background-color: rgba(100, 100, 100, 0.1);
+        }
+
+        /* dark icons are hard to see on the dark card background */
+        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>img.card-favicon-top-left-float.icon-dark {
+            background-color: #f1f1f1;
         }
 
         ::-webkit-scrollbar-thumb {

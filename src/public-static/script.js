@@ -1,0 +1,53 @@
+// Add a theme-aware background to favicons whose content would blend into the page background
+// (dark icons in dark mode, light icons in light mode). Backgrounds only fill transparent pixels,
+// and icons served without CORS simply stay unclassified and unchanged.
+(function () {
+    var DARK_LIMIT = 100;
+    var LIGHT_LIMIT = 200;
+
+    function averageLuminance(img) {
+        var size = Math.min(32, img.naturalWidth || 32, img.naturalHeight || 32) || 32;
+        var canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, size, size);
+        var data = ctx.getImageData(0, 0, size, size).data;
+        var r = 0, g = 0, b = 0, weight = 0;
+        for (var i = 0; i < data.length; i += 4) {
+            var alpha = data[i + 3] / 255;
+            if (alpha < 0.1) continue; // only visible pixels decide
+            r += data[i] * alpha;
+            g += data[i + 1] * alpha;
+            b += data[i + 2] * alpha;
+            weight += alpha;
+        }
+        if (weight === 0) return null; // fully transparent
+        return (0.2126 * r + 0.7152 * g + 0.0722 * b) / weight;
+    }
+
+    function classify(img) {
+        var luminance;
+        try {
+            luminance = averageLuminance(img);
+        } catch (e) {
+            return; // tainted canvas (no CORS) - leave as-is
+        }
+        if (luminance === null) return;
+        if (luminance < DARK_LIMIT) {
+            img.classList.add('icon-dark');
+        } else if (luminance > LIGHT_LIMIT) {
+            img.classList.add('icon-light');
+        }
+    }
+
+    function watch(img) {
+        if (img.complete && img.naturalWidth) {
+            classify(img);
+        } else {
+            img.addEventListener('load', function () { classify(img); }, { once: true });
+        }
+    }
+
+    document.querySelectorAll('img.card-favicon-top-left-float').forEach(watch);
+})();

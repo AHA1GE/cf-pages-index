@@ -43,7 +43,8 @@ function headElement(tag: string, attrs: string[]): string {
 }
 
 function composeFaviconGetterUri(target: string, size: string): string {
-  const hashedTarget = createHash('md5').update(target).digest('hex');
+  // the suffix busts browser caches (responses are immutable); bump the salt to force a refresh after worker changes
+  const hashedTarget = createHash('md5').update(target + ':v2').digest('hex');
   const url = `${config.faviconGetter}/sz/${size}/url/${encodeURIComponent(target)}/${hashedTarget}.webp`;
   return url;
 }

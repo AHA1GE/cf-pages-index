@@ -55,10 +55,13 @@
 // User preferences + daily wallpaper layer.
 //
 // Two slide switches live in the pref pill next to the hitokoto:
-//   - theme: light/dark manual override (default = follow the system)
-//   - background: Bing wallpaper (default) / animated gradient
-// Both choices persist in localStorage. Every failure path in the wallpaper
-// loader is silent - the animated gradient is already the visible design.
+//   - theme: light/dark manual override (default = follow the system). The
+//     override is kept in sessionStorage, so closing the browser clears it
+//     and the page follows the system preference again on the next visit.
+//   - background: Bing wallpaper (default) / animated gradient. Kept in
+//     localStorage - this choice is meant to stick.
+// Every failure path in the wallpaper loader is silent - the animated
+// gradient is already the visible design.
 (function () {
     var root = document.documentElement;
     var wall = document.getElementById('bg-wallpaper');
@@ -68,25 +71,31 @@
     var themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    var THEME_KEY = 'cfpi-theme-override'; // 'light' | 'dark' | absent
-    var BG_KEY = 'cfpi-bg-mode';           // 'gradient' | absent (wallpaper)
+    var THEME_KEY = 'cfpi-theme-override'; // 'light' | 'dark' | absent (session-scoped)
+    var BG_KEY = 'cfpi-bg-mode';           // 'gradient' | absent (wallpaper, persistent)
     var MEMO_PREFIX = 'cfpi-bg:';
 
-    function store(key, value) {
+    function store(key, value, session) {
+        var api = session ? sessionStorage : localStorage;
         try {
-            if (value === null) localStorage.removeItem(key);
-            else localStorage.setItem(key, value);
+            if (value === null) api.removeItem(key);
+            else api.setItem(key, value);
         } catch (e) { /* storage unavailable - non-fatal */ }
     }
 
-    function read(key) {
-        try { return localStorage.getItem(key); } catch (e) { return null; }
+    function read(key, session) {
+        var api = session ? sessionStorage : localStorage;
+        try { return api.getItem(key); } catch (e) { return null; }
     }
 
     function themeOverride() {
-        var v = read(THEME_KEY);
+        var v = read(THEME_KEY, true);
         return v === 'light' || v === 'dark' ? v : null;
     }
+
+    // the override used to live in localStorage; drop stale copies so old
+    // visitors fall back to system theme as intended
+    try { localStorage.removeItem(THEME_KEY); } catch (e) { /* non-fatal */ }
 
     function effectiveTheme() {
         return themeOverride() || (themeMedia.matches ? 'dark' : 'light');
@@ -186,7 +195,7 @@
 
     if (themeSwitch) {
         themeSwitch.addEventListener('click', function () {
-            store(THEME_KEY, effectiveTheme() === 'dark' ? 'light' : 'dark');
+            store(THEME_KEY, effectiveTheme() === 'dark' ? 'light' : 'dark', true);
             apply();
         });
     }

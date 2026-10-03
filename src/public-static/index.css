@@ -366,7 +366,7 @@ header.header {
 .sw-icon {
     display: inline-flex;
     font-size: 0.95rem;
-    opacity: 0.4;
+    opacity: 0.55;
     transition: opacity 0.2s, color 0.2s;
 }
 

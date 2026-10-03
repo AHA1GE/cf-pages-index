@@ -158,6 +158,63 @@ async function generateDynamicHead(lang: string): Promise<string> {
   return head;
 }
 
+function svgIcon(inner: string): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">${inner}</svg>`;
+}
+
+/**
+ * 生成偏好设置胶囊：主题（亮/暗）与背景（必应壁纸/动画渐变）两个滑动开关。
+ * 开关状态由 script.js 根据 localStorage 与系统偏好初始化。
+ **/
+function renderPrefPill(): string {
+  const sun = '<path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>';
+  const moon = '<path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/>';
+  const image = '<path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/><path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z"/>';
+  const stars = '<path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>';
+
+  const icon = (path: string) => element("i", ['class="sw-icon"'], svgIcon(path));
+
+  const themeSwitch = element(
+    "button",
+    [
+      'id="theme-switch"',
+      'class="sw"',
+      'type="button"',
+      'role="switch"',
+      'aria-checked="false"',
+      'aria-label="Dark theme"',
+      'title="Light / dark theme"',
+    ],
+    icon(sun) +
+    element("span", ['class="sw-track"'], element("span", ['class="sw-knob"'], "")) +
+    icon(moon)
+  );
+
+  const bgSwitch = element(
+    "button",
+    [
+      'id="bg-switch"',
+      'class="sw"',
+      'type="button"',
+      'role="switch"',
+      'aria-checked="false"',
+      'aria-label="Animated gradient background"',
+      'title="Bing wallpaper / animated gradient"',
+    ],
+    icon(image) +
+    element("span", ['class="sw-track"'], element("span", ['class="sw-knob"'], "")) +
+    icon(stars)
+  );
+
+  return element(
+    "div",
+    ['class="pref-pill prevent-select"', 'role="group"', 'aria-label="Display preferences"'],
+    themeSwitch +
+    element("span", ['class="pref-divider"', 'aria-hidden="true"'], "") +
+    bgSwitch
+  );
+}
+
 /**
  * 渲染第一个动态 div 的函数
  * @returns {string} 以字符串返回的第一个Div
@@ -290,10 +347,16 @@ function renderDynamicDiv1(lang: string): string {
       .join("")
   );
 
+  var headerControls = element(
+    "div",
+    ['class="hitoko-row"'],
+    (config.hitokoto ? headerHitoko : "") + renderPrefPill()
+  );
+
   return element(
     "header",
     ['class="header"'],
-    (config.hitokoto ? headerHitoko : "") +
+    headerControls +
     element(
       "div",
       ['id="head"', 'class="head-container"'],

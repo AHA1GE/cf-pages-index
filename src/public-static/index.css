@@ -26,34 +26,38 @@
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color-scheme: light;
-        --bg-solid: #76839c;
-        --grad-a: #93a6c6;
-        --grad-b: #c6a7b3;
-        --blob-1: rgba(133, 199, 255, 0.5);
-        --blob-2: rgba(255, 190, 160, 0.45);
-        --blob-3: rgba(160, 235, 210, 0.4);
-        --glass-fill: rgba(255, 255, 255, 0.42);
-        --glass-fill-strong: rgba(255, 255, 255, 0.58);
-        --glass-border-a: rgba(255, 255, 255, 0.75);
-        --glass-border-b: rgba(255, 255, 255, 0.2);
-        --glass-inset: rgba(255, 255, 255, 0.45);
-        --chip-fill: rgba(255, 255, 255, 0.3);
-        --glint: rgba(255, 255, 255, 0.55);
-        --shadow: rgba(20, 26, 36, 0.18);
-        --shadow-deep: rgba(20, 26, 36, 0.3);
-        --text-1: #171a1f;
-        --text-2: rgba(23, 26, 31, 0.68);
-        --badge-contrast: #222a35;
-        --scrollbar-thumb: rgba(30, 34, 40, 0.35);
-        --scrollbar-thumb-hover: rgba(30, 34, 40, 0.55);
-    }
+/* Light tokens are the default. Dark tokens live in two identical blocks:
+   one for systems preferring dark (unless light is forced via data-theme),
+   one for the manual data-theme="dark" override. Keep them in sync. */
+:root {
+    color-scheme: light;
+    --bg-solid: #76839c;
+    --grad-a: #93a6c6;
+    --grad-b: #c6a7b3;
+    --blob-1: rgba(133, 199, 255, 0.5);
+    --blob-2: rgba(255, 190, 160, 0.45);
+    --blob-3: rgba(160, 235, 210, 0.4);
+    --glass-fill: rgba(255, 255, 255, 0.42);
+    --glass-fill-strong: rgba(255, 255, 255, 0.58);
+    --glass-border-a: rgba(255, 255, 255, 0.75);
+    --glass-border-b: rgba(255, 255, 255, 0.2);
+    --glass-inset: rgba(255, 255, 255, 0.45);
+    --chip-fill: rgba(255, 255, 255, 0.3);
+    --glint: rgba(255, 255, 255, 0.55);
+    --shadow: rgba(20, 26, 36, 0.18);
+    --shadow-deep: rgba(20, 26, 36, 0.3);
+    --text-1: #171a1f;
+    --text-2: rgba(23, 26, 31, 0.68);
+    --badge-contrast: #222a35;
+    --icon-light-pad: var(--badge-contrast);
+    --icon-dark-pad: transparent;
+    --sw-track: rgba(15, 20, 28, 0.14);
+    --scrollbar-thumb: rgba(30, 34, 40, 0.35);
+    --scrollbar-thumb-hover: rgba(30, 34, 40, 0.55);
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
         color-scheme: dark;
         --bg-solid: #161926;
         --grad-a: #1b2237;
@@ -73,26 +77,65 @@
         --text-1: #f3f5f9;
         --text-2: rgba(243, 245, 249, 0.7);
         --badge-contrast: #eef1f5;
+        --icon-light-pad: transparent;
+        --icon-dark-pad: var(--badge-contrast);
+        --sw-track: rgba(0, 0, 0, 0.3);
         --scrollbar-thumb: rgba(255, 255, 255, 0.28);
         --scrollbar-thumb-hover: rgba(255, 255, 255, 0.45);
     }
 }
 
+/* manual dark override (duplicate of the block above - keep in sync) */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg-solid: #161926;
+    --grad-a: #1b2237;
+    --grad-b: #2c2440;
+    --blob-1: rgba(64, 106, 210, 0.5);
+    --blob-2: rgba(174, 92, 255, 0.4);
+    --blob-3: rgba(45, 190, 170, 0.35);
+    --glass-fill: rgba(255, 255, 255, 0.12);
+    --glass-fill-strong: rgba(255, 255, 255, 0.2);
+    --glass-border-a: rgba(255, 255, 255, 0.32);
+    --glass-border-b: rgba(255, 255, 255, 0.06);
+    --glass-inset: rgba(255, 255, 255, 0.22);
+    --chip-fill: rgba(255, 255, 255, 0.12);
+    --glint: rgba(255, 255, 255, 0.35);
+    --shadow: rgba(0, 0, 0, 0.32);
+    --shadow-deep: rgba(0, 0, 0, 0.42);
+    --text-1: #f3f5f9;
+    --text-2: rgba(243, 245, 249, 0.7);
+    --badge-contrast: #eef1f5;
+    --icon-light-pad: transparent;
+    --icon-dark-pad: var(--badge-contrast);
+    --sw-track: rgba(0, 0, 0, 0.3);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.28);
+    --scrollbar-thumb-hover: rgba(255, 255, 255, 0.45);
+}
+
+/* manual light override on a dark system: re-assert the light tokens */
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
 /* No backdrop-filter support (or it is disabled): trade translucency for
    legibility with near-opaque fills; layout is unchanged. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    @media (prefers-color-scheme: light) {
-        :root {
-            --glass-fill: rgba(245, 247, 250, 0.92);
-            --glass-fill-strong: rgba(250, 251, 253, 0.96);
-        }
+    :root {
+        --glass-fill: rgba(245, 247, 250, 0.92);
+        --glass-fill-strong: rgba(250, 251, 253, 0.96);
     }
 
     @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme="light"]) {
             --glass-fill: rgba(30, 34, 45, 0.92);
             --glass-fill-strong: rgba(38, 43, 56, 0.96);
         }
+    }
+
+    :root[data-theme="dark"] {
+        --glass-fill: rgba(30, 34, 45, 0.92);
+        --glass-fill-strong: rgba(38, 43, 56, 0.96);
     }
 }
 
@@ -185,6 +228,11 @@ body {
     opacity: 1;
 }
 
+/* user chose the animated gradient: wallpaper layer out of the picture */
+:root[data-bg="gradient"] .bg-wallpaper {
+    display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
     .bg-wallpaper {
         transition: opacity 0.6s ease-out;
@@ -223,6 +271,7 @@ body {
 #searchinput,
 #sengine .item,
 .section-chip,
+.pref-pill,
 a.card,
 footer.footer {
     position: relative;
@@ -246,11 +295,23 @@ header.header {
     text-align: center;
 }
 
+/* hitokoto chip and the preference pill share one row on wide screens;
+   on narrow screens the pill wraps below the quote */
+.hitoko-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 0 0 1.5rem;
+    padding: 0 1rem;
+}
+
 .hitoko {
     display: inline-block;
     border-radius: var(--radius-pill);
     padding: 0.32rem 1.2rem;
-    margin: 0 0 1.5rem;
+    margin: 0;
     max-width: min(92vw, 44rem);
 }
 
@@ -264,6 +325,90 @@ header.header {
 
 .hitoko p:hover {
     color: var(--text-1);
+}
+
+/* --------------------------------------------------------------------------
+   preference pill: two slide switches (theme, background)
+   -------------------------------------------------------------------------- */
+
+.pref-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    border-radius: var(--radius-pill);
+    padding: 0.35rem 0.9rem;
+}
+
+.pref-divider {
+    width: 1px;
+    height: 1.4rem;
+    background: var(--hairline);
+}
+
+.sw {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: var(--text-2);
+    cursor: pointer;
+    border-radius: var(--radius-pill);
+}
+
+.sw:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.sw-icon {
+    display: inline-flex;
+    font-size: 0.95rem;
+    opacity: 0.4;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+/* the side the knob rests on lights up */
+.sw[aria-checked="false"] .sw-icon:first-child,
+.sw[aria-checked="true"] .sw-icon:last-child {
+    opacity: 1;
+    color: var(--text-1);
+}
+
+.sw-track {
+    position: relative;
+    display: inline-block;
+    width: 2.5rem;
+    height: 1.35rem;
+    border-radius: var(--radius-pill);
+    background: var(--sw-track);
+    box-shadow:
+        inset 0 0 0 1px var(--glass-border-b),
+        inset 0 1px 3px var(--shadow);
+    transition: background-color 0.25s;
+}
+
+.sw-knob {
+    position: absolute;
+    top: 0.14rem;
+    left: 0.14rem;
+    width: 1.07rem;
+    height: 1.07rem;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 1px 4px var(--shadow);
+    transform: translateX(0);
+    transition: transform 0.25s var(--ease-out);
+}
+
+.sw[aria-checked="true"] .sw-knob {
+    transform: translateX(1.15rem);
+}
+
+.sw[aria-checked="true"] .sw-track {
+    background: var(--accent);
 }
 
 .head-container {
@@ -594,18 +739,14 @@ a.card::before {
 }
 
 /* script.js classifies favicons; give low-contrast ones an opposite-tone pad */
-@media (prefers-color-scheme: light) {
-    .card>.content>img.card-favicon-top-left-float.icon-light {
-        background: var(--badge-contrast);
-        padding: 0.22rem;
-    }
+.card>.content>img.card-favicon-top-left-float.icon-light {
+    background: var(--icon-light-pad);
+    padding: 0.22rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .card>.content>img.card-favicon-top-left-float.icon-dark {
-        background: var(--badge-contrast);
-        padding: 0.22rem;
-    }
+.card>.content>img.card-favicon-top-left-float.icon-dark {
+    background: var(--icon-dark-pad);
+    padding: 0.22rem;
 }
 
 .card>.content>div.header {
@@ -728,7 +869,9 @@ button:focus-visible {
 
     a.card,
     #sengine .item,
-    i.search-engine-button {
+    i.search-engine-button,
+    .sw-knob,
+    .sw-track {
         transition: none;
     }
 
@@ -754,6 +897,12 @@ button:focus-visible {
 
     :root {
         --glass-blur: 10px;
+    }
+
+    /* preference pill follows (sits after) the hitokoto quote on mobile */
+    .hitoko-row {
+        flex-direction: column;
+        gap: 0.6rem;
     }
 
     .search-engine-container {

@@ -1,17 +1,22 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { createHash } from 'crypto'
-import config from './configs.js';
+import config, { type LocalizedText } from './configs.js';
 
 const langs = config.langs;
 
-function multiLang(lang: string, obj: any): string {
-  // Return the value for the given language, or fallback to the default if not available.
-  try {
-    return obj[lang];
-  } catch (e) {
-    return obj['en-us'];
-  }
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function multiLang(lang: string, obj: LocalizedText): string {
+  // Return the value for the given language, or fall back to English if not available.
+  return escapeHtml(obj[lang] ?? obj['en-us']);
 }
 
 /**
@@ -94,7 +99,7 @@ function generateStaticHTML(lang: string): string {
           <main></main>
           <footer></footer>
           <script src="/dynamic.js"></script>
-          <script src="/index.js"></script>
+          <script src="/script.js"></script>
         </body>
       </html>
     `;
@@ -215,7 +220,7 @@ function renderDynamicDiv1(lang: string): string {
     element(
       "label",
       ['for="searchinput"'],
-      "waht do you want to search"
+      multiLang(lang, config.search_label)
     ) +
     element(
       "input",
@@ -223,7 +228,7 @@ function renderDynamicDiv1(lang: string): string {
         'id="searchinput"',
         'name="searchinput"',
         'type="search"',
-        'placeholder="Search"',
+        `placeholder="${multiLang(lang, config.search_placeholder)}"`,
         'autocomplete="off"',
       ],
       ""
@@ -251,7 +256,7 @@ function renderDynamicDiv1(lang: string): string {
     "div",
     ['id="sengine"', 'class="search-engine-switch-menu prevent-select"'],
     config.search_engine
-      .map((link: any, key: any) => {
+      .map((link, key) => {
         if (key == 0) {
           return element(
             "button",
@@ -287,7 +292,7 @@ function renderDynamicDiv1(lang: string): string {
  **/
 function renderDynamicDiv2(lang: string): string {
   var main = config.quickLinkLists
-    .map((item: any) => {
+    .map((item) => {
       const card = (
         url: string,
         name: string,
@@ -296,7 +301,7 @@ function renderDynamicDiv2(lang: string): string {
       ) =>
         element(
           "a",
-          ['class="card"', `href=${url}`, 'target="_blank"', 'rel="noreferrer noopener"'],
+          ['class="card"', `href="${escapeHtml(url)}"`, 'target="_blank"', 'rel="noreferrer noopener"'],
           element(
             "div",
             ['class="content"'],
@@ -304,7 +309,7 @@ function renderDynamicDiv2(lang: string): string {
               "img",
               [
                 'class="card-favicon-top-left-float" alt="logo"',
-                `src=${composeFaviconGetterUri(url, icon_size)}`
+                `src="${composeFaviconGetterUri(url, icon_size)}"`
               ],
               ""
             ) +
@@ -322,7 +327,7 @@ function renderDynamicDiv2(lang: string): string {
         "div",
         ['class="four-stackable-cards"'],
         item.quickLinkList
-          .map((link: any) => {
+          .map((link) => {
             return card(link.url, multiLang(lang, link.name), multiLang(lang, link.desc), link.icon_size);
           })
           .join("")
@@ -471,6 +476,12 @@ async function buildLangs() {
 const publicDir = path.join('public');
 await fs.ensureDir(publicDir);
 console.log('Public directory created successfully.');
+await fs.writeFile(
+  path.join('functions', '_langs.js'),
+  `export const langs = new Set(${JSON.stringify(langs)});\n`,
+  'utf8'
+);
+console.log('Language module generated successfully.');
 copyStaticFiles().catch(err => {
   console.error('Error during copy static files:', err);
 });

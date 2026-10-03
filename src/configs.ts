@@ -1,6 +1,40 @@
-const config = {
+export interface LocalizedText {
+    [lang: string]: string;
+}
+
+export interface SearchEngine {
+    name: LocalizedText;
+    template: string;
+}
+
+export interface Link {
+    url: string;
+    name: LocalizedText;
+    desc: LocalizedText;
+    icon_size: string;
+}
+
+export interface LinkGroup {
+    name: LocalizedText;
+    icon: string;
+    quickLinkList: Link[];
+}
+
+export interface Config {
+    langs: string[];
+    faviconGetter: string;
+    title: LocalizedText;
+    subtitle: LocalizedText;
+    search_placeholder: LocalizedText;
+    search_label: LocalizedText;
+    hitokoto: boolean;
+    search: boolean;
+    search_engine: SearchEngine[];
+    quickLinkLists: LinkGroup[];
+}
+
+const config: Config = {
     "langs": ["zh-cn", "en-us"],
-    "remoteURI": "https://raw.githubusercontent.com/AHA1GE/cf-worker-dir-remasterd/main/src/",
     "faviconGetter": "https://favicon.ahaigege.com",
     "title": {
         "en-us": "AHAI Nav",
@@ -9,6 +43,14 @@ const config = {
     "subtitle": {
         "en-us": "AHAI's Index",
         "zh-cn": "AHAI的首页"
+    },
+    "search_placeholder": {
+        "en-us": "Search",
+        "zh-cn": "搜索"
+    },
+    "search_label": {
+        "en-us": "What do you want to search?",
+        "zh-cn": "你想搜索什么？"
     },
     "hitokoto": true,
     "search": true,

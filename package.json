@@ -5,8 +5,7 @@
   "type": "module",
   "main": "building/build.js",
   "scripts": {
-    "build": "tsc && node building/build.js",
-    "test": "tsc && node building/build.js"
+    "build": "tsc && node building/build.js"
   },
   "keywords": [],
   "author": "",

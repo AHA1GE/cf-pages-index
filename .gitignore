@@ -132,3 +132,4 @@ dist
 # generated
 public
 building
+functions/_langs.js

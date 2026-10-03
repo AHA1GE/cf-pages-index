@@ -61,14 +61,14 @@
         --blob-1: rgba(64, 106, 210, 0.5);
         --blob-2: rgba(174, 92, 255, 0.4);
         --blob-3: rgba(45, 190, 170, 0.35);
-        --glass-fill: rgba(255, 255, 255, 0.09);
-        --glass-fill-strong: rgba(255, 255, 255, 0.16);
+        --glass-fill: rgba(255, 255, 255, 0.12);
+        --glass-fill-strong: rgba(255, 255, 255, 0.2);
         --glass-border-a: rgba(255, 255, 255, 0.32);
         --glass-border-b: rgba(255, 255, 255, 0.06);
         --glass-inset: rgba(255, 255, 255, 0.22);
-        --chip-fill: rgba(255, 255, 255, 0.1);
+        --chip-fill: rgba(255, 255, 255, 0.12);
         --glint: rgba(255, 255, 255, 0.35);
-        --shadow: rgba(0, 0, 0, 0.28);
+        --shadow: rgba(0, 0, 0, 0.32);
         --shadow-deep: rgba(0, 0, 0, 0.42);
         --text-1: #f3f5f9;
         --text-2: rgba(243, 245, 249, 0.7);
@@ -105,6 +105,7 @@ html {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) transparent;
+    scroll-padding-bottom: 4.5rem;
 }
 
 * {
@@ -208,6 +209,7 @@ body {
 .hitoko,
 #searchinput,
 #sengine .item,
+.section-chip,
 a.card,
 footer.footer {
     position: relative;
@@ -401,6 +403,10 @@ i.search-engine-button:hover {
     background:
         linear-gradient(var(--glass-fill-strong), var(--glass-fill-strong)) padding-box,
         linear-gradient(135deg, var(--glass-border-a), var(--glass-border-b) 45%, var(--glass-border-a)) border-box;
+    box-shadow:
+        0 6px 18px var(--shadow),
+        inset 0 1px 0 var(--glass-inset),
+        inset 0 0 0 1px var(--glass-border-a);
 }
 
 /* Skewed light streak sweeping across on hover. Transform-only so it does
@@ -459,7 +465,7 @@ i.search-engine-button:hover {
 main.main {
     width: min(100%, var(--content-width));
     margin: 0.8rem auto 1rem;
-    padding: 0 1rem;
+    padding: 0 1rem 4rem;
 }
 
 .quicklink-div {
@@ -477,7 +483,16 @@ h2.horizontal-divider {
     font-weight: 600;
     color: var(--text-1);
     margin: 2rem 0 0.5rem;
-    text-shadow: 0 1px 3px var(--shadow);
+}
+
+/* heading text sits on its own glass chip so it stays legible over any
+   wallpaper band; the hairline rules flank it */
+.section-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: var(--radius-pill);
+    padding: 0.4rem 1.1rem;
 }
 
 h2.horizontal-divider::before,
@@ -498,7 +513,6 @@ h2.horizontal-divider::after {
 
 i.quicklink-icon {
     display: inline-flex;
-    margin-right: 0.6rem;
     font-size: 1.05em;
     color: var(--text-2);
 }
@@ -591,6 +605,7 @@ a.card::before {
     font-size: 0.88rem;
     color: var(--text-2);
     margin-top: 0.15rem;
+    text-shadow: 0 1px 2px var(--shadow);
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;

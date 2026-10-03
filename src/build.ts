@@ -342,7 +342,8 @@ function renderDynamicDiv2(lang: string): string {
       const divider = element(
         "h2",
         ['class="horizontal-divider"'],
-        element("i", ['class="quicklink-icon"'], item.icon) + multiLang(lang, item.name)
+        element("span", ['class="section-chip"'],
+          element("i", ['class="quicklink-icon"'], item.icon) + multiLang(lang, item.name))
       );
 
       var content = element(

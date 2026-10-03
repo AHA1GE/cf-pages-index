@@ -133,3 +133,6 @@ dist
 public
 building
 functions/_langs.js
+# local dev artifacts
+.shots/
+.wrangler/

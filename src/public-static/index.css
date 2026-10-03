@@ -1,670 +1,818 @@
-    html {
-        font-size: 15px;
-        font-family: Arial, Helvetica, sans-serif;
-    }
+/* ==========================================================================
+   AHAI Nav — glassmorphism theme
+   Layer stack (back to front):
+     .bg-base       animated gradient, always painted first frame, no JS needed
+     .bg-wallpaper  daily Bing image from /bg/<date>-<theme>.jpg, cross-faded in
+     .bg-noise      fine grain, kills gradient banding, adds frosted texture
+     content        glass surfaces (blur + translucent fill + gradient border)
+   Blur radii never change on interaction; feedback uses transform/shadow/fill
+   so hover stays on the compositor.
+   ========================================================================== */
 
-    body {
-        width: 100vw;
-        height: 100vh;
-        margin: 0px;
-        padding: 0px;
-        font-size: 1rem;
-        background-color: #222222;
-        color: #f1f1f1;
-        overflow-x: hidden;
-        overflow-y: scroll;
-    }
+:root {
+    --radius-lg: 20px;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --radius-pill: 999px;
 
+    --glass-blur: 16px;
+    --glass-sat: 160%;
+
+    --content-width: 62rem;
+    --accent: #6ea8fe;
+    --noise-opacity: 0.05;
+    --hairline: rgba(127, 127, 127, 0.45);
+
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color-scheme: light;
+        --bg-solid: #76839c;
+        --grad-a: #93a6c6;
+        --grad-b: #c6a7b3;
+        --blob-1: rgba(133, 199, 255, 0.5);
+        --blob-2: rgba(255, 190, 160, 0.45);
+        --blob-3: rgba(160, 235, 210, 0.4);
+        --glass-fill: rgba(255, 255, 255, 0.42);
+        --glass-fill-strong: rgba(255, 255, 255, 0.58);
+        --glass-border-a: rgba(255, 255, 255, 0.75);
+        --glass-border-b: rgba(255, 255, 255, 0.2);
+        --glass-inset: rgba(255, 255, 255, 0.45);
+        --chip-fill: rgba(255, 255, 255, 0.3);
+        --glint: rgba(255, 255, 255, 0.55);
+        --shadow: rgba(20, 26, 36, 0.18);
+        --shadow-deep: rgba(20, 26, 36, 0.3);
+        --text-1: #171a1f;
+        --text-2: rgba(23, 26, 31, 0.68);
+        --badge-contrast: #222a35;
+        --scrollbar-thumb: rgba(30, 34, 40, 0.35);
+        --scrollbar-thumb-hover: rgba(30, 34, 40, 0.55);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+        --bg-solid: #161926;
+        --grad-a: #1b2237;
+        --grad-b: #2c2440;
+        --blob-1: rgba(64, 106, 210, 0.5);
+        --blob-2: rgba(174, 92, 255, 0.4);
+        --blob-3: rgba(45, 190, 170, 0.35);
+        --glass-fill: rgba(255, 255, 255, 0.09);
+        --glass-fill-strong: rgba(255, 255, 255, 0.16);
+        --glass-border-a: rgba(255, 255, 255, 0.32);
+        --glass-border-b: rgba(255, 255, 255, 0.06);
+        --glass-inset: rgba(255, 255, 255, 0.22);
+        --chip-fill: rgba(255, 255, 255, 0.1);
+        --glint: rgba(255, 255, 255, 0.35);
+        --shadow: rgba(0, 0, 0, 0.28);
+        --shadow-deep: rgba(0, 0, 0, 0.42);
+        --text-1: #f3f5f9;
+        --text-2: rgba(243, 245, 249, 0.7);
+        --badge-contrast: #eef1f5;
+        --scrollbar-thumb: rgba(255, 255, 255, 0.28);
+        --scrollbar-thumb-hover: rgba(255, 255, 255, 0.45);
+    }
+}
+
+/* No backdrop-filter support (or it is disabled): trade translucency for
+   legibility with near-opaque fills; layout is unchanged. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     @media (prefers-color-scheme: light) {
-
-        /* Light mode CSS styles */
-        body {
-            background-color: #f1f1f1;
-            color: #222222;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
-            color: #222222;
-        }
-
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card {
-            color: #222222;
-            background-color: rgba(10, 10, 10, 0.2);
-        }
-
-        /* light icons are hard to see on the light card background */
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>img.card-favicon-top-left-float.icon-light {
-            background-color: #222222;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #cccccc;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #999999;
+        :root {
+            --glass-fill: rgba(245, 247, 250, 0.92);
+            --glass-fill-strong: rgba(250, 251, 253, 0.96);
         }
     }
 
     @media (prefers-color-scheme: dark) {
-
-        /* Dark mode CSS styles */
-        body {
-            background-color: #222222;
-            color: #f1f1f1;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
-            color: #f1f1f1;
-        }
-
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card {
-            color: #f1f1f1;
-            background-color: rgba(100, 100, 100, 0.1);
-        }
-
-        /* dark icons are hard to see on the dark card background */
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>img.card-favicon-top-left-float.icon-dark {
-            background-color: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #999999;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #cccccc;
+        :root {
+            --glass-fill: rgba(30, 34, 45, 0.92);
+            --glass-fill-strong: rgba(38, 43, 56, 0.96);
         }
     }
+}
 
-    header.header {
-        position: static;
-        width: 100%;
-        height: auto;
-        text-align: center;
-        margin-top: 1rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 1rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
+/* --------------------------------------------------------------------------
+   base
+   -------------------------------------------------------------------------- */
+
+html {
+    font-size: 15px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--bg-solid);
+    color: var(--text-1);
+    overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   background stack
+   -------------------------------------------------------------------------- */
+
+.bg-base {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    overflow: hidden;
+    background:
+        radial-gradient(42vmax 42vmax at 82% 78%, var(--blob-3), transparent 70%),
+        linear-gradient(160deg, var(--grad-a), var(--grad-b));
+}
+
+/* Two drifting color blobs give the glass something alive to refract.
+   Only transforms are animated, so this stays on the compositor. */
+.bg-base::before,
+.bg-base::after {
+    content: "";
+    position: absolute;
+    width: 65vmax;
+    height: 65vmax;
+    border-radius: 50%;
+    filter: blur(8vmax);
+    will-change: transform;
+}
+
+.bg-base::before {
+    top: -20vmax;
+    left: -15vmax;
+    background: radial-gradient(circle, var(--blob-1), transparent 65%);
+    animation: blob-drift-a 42s var(--ease-out) infinite alternate;
+}
+
+.bg-base::after {
+    bottom: -20vmax;
+    right: -15vmax;
+    background: radial-gradient(circle, var(--blob-2), transparent 65%);
+    animation: blob-drift-b 56s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift-a {
+    to {
+        transform: translate3d(22vw, 14vh, 0) scale(1.18);
+    }
+}
+
+@keyframes blob-drift-b {
+    to {
+        transform: translate3d(-18vw, -10vh, 0) scale(1.12);
+    }
+}
+
+.bg-wallpaper {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-position: center;
+    background-size: cover;
+    opacity: 0;
+}
+
+.bg-wallpaper.loaded {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .bg-wallpaper {
+        transition: opacity 0.6s ease-out;
+    }
+}
+
+.bg-noise {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: var(--noise-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+}
+
+/* --------------------------------------------------------------------------
+   glass surface recipe (shared)
+   -------------------------------------------------------------------------- */
+
+.hitoko,
+#searchinput,
+#sengine .item,
+a.card,
+footer.footer {
+    position: relative;
+    border: 1px solid transparent;
+    background:
+        linear-gradient(var(--glass-fill), var(--glass-fill)) padding-box,
+        linear-gradient(135deg, var(--glass-border-a), var(--glass-border-b) 45%, var(--glass-border-a)) border-box;
+    box-shadow:
+        0 10px 34px var(--shadow),
+        inset 0 1px 0 var(--glass-inset);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+/* --------------------------------------------------------------------------
+   header
+   -------------------------------------------------------------------------- */
+
+header.header {
+    padding: 1.4rem 1rem 0.3rem;
+    text-align: center;
+}
+
+.hitoko {
+    display: inline-block;
+    border-radius: var(--radius-pill);
+    padding: 0.32rem 1.2rem;
+    margin: 0 0 1.5rem;
+    max-width: min(92vw, 44rem);
+}
+
+.hitoko p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.hitoko p:hover {
+    color: var(--text-1);
+}
+
+.head-container {
+    text-align: center;
+}
+
+h1.title-div {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin: 0 0 0.4rem;
+    padding: 0;
+}
+
+.globe-icon {
+    display: inline-flex;
+    font-size: 2.5rem;
+    color: var(--text-1);
+    filter: drop-shadow(0 2px 8px var(--shadow));
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    text-shadow: 0 2px 14px var(--shadow);
+}
+
+.sub-title {
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    color: var(--text-2);
+    margin-top: 0.1rem;
+}
+
+/* --------------------------------------------------------------------------
+   search area (sticky)
+   -------------------------------------------------------------------------- */
+
+.search-engine-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 1rem 1rem 1.1rem;
+}
+
+.search-engine-container {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 42rem) 1fr;
+    align-items: center;
+}
+
+img.search-engine-favicon-top-left-float {
+    justify-self: end;
+    z-index: 2;
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-right: -3.2rem;
+    padding: 0.18rem;
+    border-radius: 50%;
+    background: var(--chip-fill);
+    box-shadow: 0 2px 10px var(--shadow);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+}
+
+.search-engine-container>label {
+    display: none;
+}
+
+#searchinput {
+    justify-self: stretch;
+    width: 100%;
+    font: inherit;
+    font-size: 1.2rem;
+    color: var(--text-1);
+    padding: 1.15rem 4.4rem;
+    border-radius: var(--radius-pill);
+    transition: box-shadow 0.25s var(--ease-out);
+}
+
+#searchinput::placeholder {
+    color: var(--text-2);
+    opacity: 0.85;
+}
+
+#searchinput:focus-visible {
+    outline: none;
+    box-shadow:
+        0 10px 34px var(--shadow),
+        inset 0 1px 0 var(--glass-inset),
+        0 0 0 3px var(--accent);
+}
+
+i.search-engine-button {
+    justify-self: start;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    margin-left: -3.4rem;
+    font-size: 1.55rem;
+    color: var(--text-2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s, transform 0.2s;
+}
+
+i.search-engine-button:hover {
+    color: var(--text-1);
+    background: var(--chip-fill);
+    transform: scale(1.08);
+}
+
+.search-engine-switch-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    padding: 0;
+}
+
+#sengine .item {
+    overflow: hidden;
+    border-radius: var(--radius-pill);
+    font: inherit;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    padding: 0.55rem 1.4rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+#sengine .item:hover {
+    color: var(--text-1);
+    transform: translateY(-1px);
+}
+
+#sengine .item.active {
+    color: var(--text-1);
+    background:
+        linear-gradient(var(--glass-fill-strong), var(--glass-fill-strong)) padding-box,
+        linear-gradient(135deg, var(--glass-border-a), var(--glass-border-b) 45%, var(--glass-border-a)) border-box;
+}
+
+/* Skewed light streak sweeping across on hover. Transform-only so it does
+   not trigger layout; clipped by the pill's overflow: hidden. */
+#sengine .item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, var(--glint), transparent);
+    transform: skewX(-20deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+    #sengine .item:hover::before,
+    #sengine .item:focus-visible::before {
+        animation: glint-sweep 0.7s ease;
+    }
+}
+
+@keyframes glint-sweep {
+    0% {
+        transform: skewX(-20deg) translateX(0);
+        opacity: 0;
     }
 
-    header.header>div.hitoko {
-        margin-top: 0rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 2rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-        text-align: center;
-        font-size: 1rem;
-        padding: 0.2rem;
+    20% {
+        opacity: 1;
     }
 
-    header.header>div.hitoko>p {
-        margin: 0px;
-        padding: 0px;
+    80% {
+        opacity: 1;
     }
 
-    header.header>div.hitoko>p:hover {
-        text-decoration: underline;
-        cursor: pointer;
+    100% {
+        transform: skewX(-20deg) translateX(360%);
+        opacity: 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   link cards
+   -------------------------------------------------------------------------- */
+
+.scrollable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main.main {
+    width: min(100%, var(--content-width));
+    margin: 0.8rem auto 1rem;
+    padding: 0 1rem;
+}
+
+.quicklink-div {
+    width: 100%;
+}
+
+.quicklink {
+    margin: 0;
+}
+
+h2.horizontal-divider {
+    display: flex;
+    align-items: center;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-1);
+    margin: 2rem 0 0.5rem;
+    text-shadow: 0 1px 3px var(--shadow);
+}
+
+h2.horizontal-divider::before,
+h2.horizontal-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    margin: 0 1.1rem;
+}
+
+h2.horizontal-divider::before {
+    background: linear-gradient(to right, transparent, var(--hairline));
+}
+
+h2.horizontal-divider::after {
+    background: linear-gradient(to left, transparent, var(--hairline));
+}
+
+i.quicklink-icon {
+    display: inline-flex;
+    margin-right: 0.6rem;
+    font-size: 1.05em;
+    color: var(--text-2);
+}
+
+.four-stackable-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.9rem;
+}
+
+a.card {
+    flex: 1 1 calc(20% - 1rem);
+    min-width: 11rem;
+    border-radius: var(--radius);
+    color: var(--text-1);
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out);
+}
+
+a.card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 22px 48px var(--shadow-deep),
+        inset 0 1px 0 var(--glass-inset);
+}
+
+a.card:active {
+    transform: translateY(-2px) scale(0.99);
+}
+
+a.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, var(--glint), transparent);
+    transform: skewX(-20deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    a.card:hover::before {
+        animation: glint-sweep 0.7s ease;
+    }
+}
+
+.card>.content {
+    position: relative;
+    z-index: 1;
+    padding: 1.1rem;
+}
+
+.card>.content>img.card-favicon-top-left-float {
+    width: 3rem;
+    height: 3rem;
+    float: left;
+    margin: 0 0.9rem 0.4rem 0;
+    border-radius: 26%;
+    padding: 0.22rem;
+    background: var(--chip-fill);
+}
+
+/* script.js classifies favicons; give low-contrast ones an opposite-tone pad */
+@media (prefers-color-scheme: light) {
+    .card>.content>img.card-favicon-top-left-float.icon-light {
+        background: var(--badge-contrast);
+        padding: 0.22rem;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .card>.content>img.card-favicon-top-left-float.icon-dark {
+        background: var(--badge-contrast);
+        padding: 0.22rem;
+    }
+}
+
+.card>.content>div.header {
+    font-size: 1.02rem;
+    font-weight: 600;
+    text-shadow: 0 1px 2px var(--shadow);
+}
+
+.card>.content>div.meta {
+    font-size: 0.88rem;
+    color: var(--text-2);
+    margin-top: 0.15rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* --------------------------------------------------------------------------
+   footer
+   -------------------------------------------------------------------------- */
+
+footer.footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-2);
+}
+
+.footer-div {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+footer.footer a.label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--text-2);
+    text-decoration: none;
+    padding: 0.3rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+footer.footer a.label:hover {
+    color: var(--text-1);
+    background: var(--chip-fill);
+}
+
+.github-icon {
+    display: inline-flex;
+}
+
+img.gongan-icon {
+    width: 1em;
+    height: 1em;
+}
+
+/* --------------------------------------------------------------------------
+   utilities, a11y, scrollbar
+   -------------------------------------------------------------------------- */
+
+.prevent-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.svg-icon {
+    width: 1em;
+    height: 1em;
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+#searchinput:focus-visible {
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* --------------------------------------------------------------------------
+   motion preferences
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .bg-base::before,
+    .bg-base::after {
+        animation: none;
     }
 
-    header.header>div.head-container {
-        text-align: center;
-        display: block;
-        width: auto !important;
-        margin-left: 1rem !important;
-        margin-right: 1rem !important;
+    a.card,
+    #sengine .item,
+    i.search-engine-button {
+        transition: none;
     }
 
-    header.header>div.head-container>h1.title-div {
-        margin-top: 0rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 1rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-        display: inline-table;
+    a.card:hover,
+    #sengine .item:hover {
+        transform: none;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   mobile
+   -------------------------------------------------------------------------- */
+
+@media screen and (max-width: 767px) {
+
+    :root {
+        --glass-blur: 10px;
     }
 
-    header.header>div.head-container>h1.title-div>i.glob-icon {
-        display: table-cell;
-        width: 1em;
-        height: 1em;
+    .search-engine-container {
+        grid-template-columns: 1fr minmax(0, 85vw) 1fr;
     }
 
-    header.header>div.head-container>h1.title-div>div.title {
-        display: table-cell;
-        font-size: 2rem;
-        font-weight: bold;
-        margin-top: 0rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 0rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-        text-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
-    }
-
-    header.header>div.head-container>h1.title-div>div.title>div.sub-title {
-        font-size: 0.95rem;
-        font-weight: normal;
-        padding-left: 3rem;
-        color: rgb(135, 135, 135);
-    }
-
-    div.search-engine-wrapper {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        width: 100%;
-        padding-left: 1rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        padding-right: 1rem;
-        -webkit-backdrop-filter: blur(2rem);
-        backdrop-filter: blur(2rem);
-    }
-
-    div.search-engine-wrapper>div.search-engine-container {
-        width: 100%;
-        height: auto;
-        display: grid;
-        grid-template-columns: 1fr minmax(40rem, 2fr) 1fr;
-        grid-template-rows: auto;
-        line-height: 4rem;
-    }
-
-    div.search-engine-wrapper>div.search-engine-container>img.search-engine-favicon-top-left-float {
-        z-index: 3;
-        display: inline-block;
-        width: 2.5rem;
-        height: 2.5rem;
-        margin-top: 0;
-        margin-left: 0;
-        margin-right: -3.3rem;
-        margin-bottom: 0;
-        padding: auto 0rem;
-        justify-self: end;
-        align-self: center;
-        clip-path: circle(50%);
-    }
-
-    div.search-engine-wrapper>div.search-engine-container>label {
+    i.search-engine-button {
         display: none;
     }
 
-    div.search-engine-wrapper>div.search-engine-container>input#searchinput {
-        z-index: 2;
-        display: inline-block;
-        justify-self: stretch;
-        align-self: center;
-        vertical-align: middle;
-        overflow: visible;
-        text-align: left;
-        font-size: 1.3rem;
-        padding-left: 4rem;
-        padding-top: 1.5rem;
-        padding-bottom: 1.5rem;
-        padding-right: 4rem;
-        border-top: solid 0rem rgba(0, 0, 0, 0);
-        border-left: solid 0rem rgba(0, 0, 0, 0);
-        border-right: solid 0rem rgba(0, 0, 0, 0);
-        border-bottom: solid 0rem rgba(0, 0, 0, 0);
-        border-radius: 0.8rem;
-        background: rgba(255, 255, 255, 0.9);
-        color: rgb(0, 0, 0);
-        outline: solid 0rem rgba(0, 0, 0, 0);
-        box-shadow: inset 0.1rem 0.1rem 1rem 0rem rgba(0, 0, 0, 0.5),
-            -0.1rem -0.1rem 2rem 0rem rgba(255, 255, 255, 0.1)
+    #searchinput {
+        padding: 1.05rem 4.4rem;
+        font-size: 1.05rem;
     }
 
-    div.search-engine-wrapper>div.search-engine-container>i.search-engine-button {
-        z-index: 3;
-        display: inline-block;
-        justify-self: start;
-        align-self: center;
-        vertical-align: middle;
-        margin-top: 0rem;
-        margin-left: -3.5rem;
-        margin-right: 0rem;
-        margin-bottom: 0rem;
-        width: 2.5rem;
-        height: 2.5rem;
-        font-size: 2.5rem;
-        color: #222222;
-    }
-
-    div.search-engine-wrapper>div.search-engine-container>i.search-engine-button:hover {
-        cursor: pointer;
-        color: rgb(124, 124, 124);
-        transition: all 0.1s !important;
-    }
-
-    div.search-engine-wrapper>div.search-engine-container>i.search-engine-button>svg {
-        position: relative;
-        top: -0.4rem;
-    }
-
-    div.search-engine-wrapper>div.search-engine-switch-menu {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-left: 0rem;
-        padding-top: 0rem;
-        padding-bottom: 0rem;
-        padding-right: 0rem;
-        margin-top: 0rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 0rem;
-    }
-
-    div.search-engine-wrapper>div.search-engine-switch-menu>button.item:hover {
-        cursor: pointer;
-        letter-spacing: 0.3rem;
-        transition: all 0.1s ease-in-out !important;
-    }
-
-    div.search-engine-wrapper>div.search-engine-switch-menu>button.item {
-        /* color: rgb(255, 255, 255); */
-        flex: 0 0 auto;
-        padding-left: 1.5rem;
-        padding-top: .6rem;
-        padding-bottom: 1rem;
-        padding-right: 1.5rem;
-        margin-top: 0rem;
-        margin-left: -0px;
-        margin-right: -0px;
-        margin-bottom: 1.5rem;
-        border-top-left-radius: 0rem;
-        border-top-right-radius: 0rem;
-        border-bottom-right-radius: 0.8rem;
-        border-bottom-left-radius: 0.8rem;
-        border-left: 0px solid transparent;
-        border-right: 0px solid transparent;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        border-top: none;
-        background-color: rgba(255, 255, 255, 0.05);
-        box-shadow: 0rem 1rem 2rem 0rem rgba(0, 0, 0, 0.2);
-        letter-spacing: 0.1rem;
-        -webkit-backdrop-filter: blur(1rem);
-        backdrop-filter: blur(1rem);
-    }
-
-    div.search-engine-wrapper>div.search-engine-switch-menu>button.item::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
-        transform: skewX(45deg) translateX(0);
-
-    }
-
-    div.search-engine-wrapper>div.search-engine-switch-menu>button.active {
-        background-color: rgba(255, 255, 255, 0.3);
-        letter-spacing: 0.3rem;
-    }
-
-    div.scrollable {
-        width: 100%;
-        height: auto;
-        margin-top: 0rem;
-        margin-left: 0.1rem;
-        margin-right: 0.1rem;
-        margin-bottom: 0rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-        /* overflow-x: clip; */
-        /* overflow-y: scroll; */
-        display: flex;
-        flex-direction: column;
-        justify-content: start;
-        align-items: center;
-    }
-
-    div.scrollable>main.main {
-        width: 100%;
-        margin-top: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    div.scrollable>main.main>div.quicklink-div {
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink {
-        margin-top: 1rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 1rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>h2.horizontal-divider {
-        font-size: 1.8rem;
-        font-weight: normal;
-        margin-top: 2.5rem;
-        margin-left: 0rem;
-        margin-right: 0rem;
-        margin-bottom: 0.8rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>h2.horizontal-divider:before,
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>h2.horizontal-divider:after {
-        content: "";
-        flex-grow: 1;
-        height: 2px;
-        margin: 0rem 1rem;
-        background-color: rgba(200, 200, 200, 0.9);
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>h2.horizontal-divider>i.quicklink-icon {
-        margin-top: 0rem;
-        margin-left: 0rem;
-        margin-right: 1rem;
-        margin-bottom: 0rem;
-        padding-top: 0rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-bottom: 0rem;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card:visited {
-        text-decoration: none;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card {
-        transition: all 0.2s ease-in-out 0s;
-        text-decoration: none;
-        flex-basis: calc(20%);
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        margin-left: .6rem;
-        margin-right: .6rem;
-        padding: 0rem;
-        border: none;
-        border-radius: 1rem;
-        background-color: rgba(100, 100, 100, 0.1);
-        box-shadow: 1rem 1rem 2rem 0rem rgba(255, 255, 255, 0.2),
-            -1rem -1rem 2rem 0rem rgba(0, 0, 0, 0.2),
-            inset -0.5rem -0.5rem 1rem 0rem rgba(255, 255, 255, 0.2);
-        -webkit-backdrop-filter: blur(2rem);
-        backdrop-filter: blur(2rem);
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card:hover {
-        transition: all 0.2s ease-in-out 0s;
-        /* Lift the card up */
-        transform: translateY(-5px);
-        /* Adjust blur to simulate lift */
-        -webkit-backdrop-filter: blur(10rem);
-        backdrop-filter: blur(10rem);
-        /* Enhance the shadow for a lifted effect */
-        box-shadow: 1.5rem 1.5rem 3rem 0rem rgba(255, 255, 255, 0.3),
-            -1.5rem -1.5rem 3rem 0rem rgba(0, 0, 0, 0.3);
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card:active {
-        transition: all 0.1s ease-in-out 0s !important;
-        /* Slightly lower than the hover effect to simulate press */
-        transform: translateY(-2px);
-        /* Adjust blur to simulate press */
-        -webkit-backdrop-filter: blur(5rem);
-        backdrop-filter: blur(5rem);
-        /* Add inset shadow for pressed effect */
-        box-shadow: 1.2rem 1.2rem 2.2rem 0rem rgba(255, 255, 255, 0.2),
-            -1.2rem -1.2rem 2.2rem 0rem rgba(0, 0, 0, 0.2),
-            inset 0.5rem 0.5rem 1rem 0rem rgba(128, 128, 128, 0.1),
-            inset -0.5rem -0.5rem 1rem 0rem rgba(0, 0, 0, 0.2);
-
-
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content {
-        margin: 0rem;
-        padding: 1rem;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>img.card-favicon-top-left-float {
-        width: 3rem;
-        height: 3rem;
-        margin-right: 1em;
-        margin-bottom: 1em;
-        clip-path: circle(50%);
-        position: relative;
-        float: left;
-        vertical-align: middle;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>div.header {
-        font-size: 1rem;
-    }
-
-    div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards>a.card>div.content>div.meta {
+    #sengine .item {
+        padding: 0.5rem 0.9rem;
         font-size: 0.9rem;
     }
 
-    footer.footer {
-        color: rgb(201, 201, 201);
-        display: flex;
-        align-items: end;
-        justify-content: center;
-        height: 3rem;
-        line-height: 3rem;
+    .four-stackable-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    a.card {
+        flex: 0 0 auto;
         width: 100%;
-        margin: 0rem;
-        text-align: center;
-        font-size: 0, 85rem;
-        background-image: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(40, 40, 40, 0.5));
-        -webkit-backdrop-filter: blur(2rem);
-        backdrop-filter: blur(2rem);
+        max-width: 30rem;
     }
 
-    footer.footer>div.footer-div>a.label {
-        color: rgb(201, 201, 201);
-        background-image: linear-gradient(to top, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.6));
-        border-radius: 0.2rem;
-        text-decoration: none;
-        padding: 0.5rem 0.5rem 0rem 0.4rem;
+    .card>.content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.7rem;
     }
 
-    footer.footer>div.footer-div>a.label:visited {
-        color: rgb(201, 201, 201);
-        text-decoration: none;
+    .card>.content>img.card-favicon-top-left-float {
+        float: none;
+        margin: 0;
+        flex: 0 0 auto;
     }
 
-    /* 通用样式 */
-    .prevent-select {
-        /* Safari */
-        -webkit-user-select: none;
-        /* Firefox */
-        -moz-user-select: none;
-        /* IE10+/Edge */
-        -ms-user-select: none;
-        /* Standard syntax */
-        user-select: none;
+    .card>.content>div.header {
+        flex: 0 0 auto;
     }
 
-    .svg-icon {
-        width: 1em;
-        height: 1em;
+    .card>.content>div.meta {
+        flex: 1 1 auto;
+        -webkit-line-clamp: 3;
+    }
+}
+
+@media screen and (max-height: 480px) {
+
+    /* mobile landscape */
+
+    .four-stackable-cards {
+        flex-direction: column;
+        align-items: center;
     }
 
-    * {
-        box-sizing: border-box;
+    a.card {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 30rem;
     }
 
-    /* 手机端样式表 mobile css */
-    @media screen and (max-width: 767px) {
-
-        /* 手机竖屏 mobile potriat */
-
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards {
-            flex-direction: column;
-            padding-left: 5%;
-            padding-right: 5%;
-        }
-
-        div.scrollable>main.main {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .card {
-            flex-basis: calc(100% - 3rem);
-        }
-
-        .card>.content {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-
-        }
-
-        .card>.content>.header {
-            flex-basis: 25%;
-            margin: .5rem;
-        }
-
-        .card>.content>.meta {
-            flex-basis: 50%;
-            margin: .5rem;
-        }
-
-        div.search-engine-wrapper>div.search-engine-container {
-            width: 100%;
-            height: auto;
-            display: grid;
-            grid-template-columns: 1fr 85vw 1fr;
-            grid-template-rows: auto;
-            line-height: 4rem;
-        }
-
-        div.search-engine-wrapper>div.search-engine-container>i.search-engine-button {
-            display: none;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>a.item {
-            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-            margin: 0;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>a.item::before {
-            display: none;
-        }
-
-        footer.footer {
-            position: relative;
-        }
+    .card>.content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.7rem;
     }
 
-    @media screen and (max-height: 480px) {
-
-        /* 手机横屏 mobile landscape */
-        body {
-            flex-direction: row;
-        }
-
-        div.scrollable>main.main>div.quicklink-div>div.quicklink>div.four-stackable-cards {
-            flex-direction: column;
-            padding-left: 5%;
-            padding-right: 5%;
-        }
-
-        .card {
-            flex-basis: calc(100% - 3rem);
-        }
-
-        .card>.content {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-
-        }
-
-        .card>.content>.header {
-            flex-basis: 25%;
-            margin: .5rem;
-        }
-
-        .card>.content>.meta {
-            flex-basis: 50%;
-            margin: .5rem;
-        }
-
-        div.search-engine-wrapper>div.search-engine-container>i.search-engine-button {
-            display: none;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>a.item {
-            padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-            margin: 0;
-        }
-
-        div.search-engine-wrapper>div.search-engine-switch-menu>a.item::before {
-            display: none;
-        }
-
+    .card>.content>img.card-favicon-top-left-float {
+        float: none;
+        margin: 0;
+        flex: 0 0 auto;
     }
 
-    /* 滚动条样式 scroll bar css */
-    /* WebKit */
-    ::-webkit-scrollbar {
-        margin: 1px;
-        padding: 1px;
-        width: 7px;
-        box-sizing: border-box;
-        background-color: transparent;
+    .card>.content>div.header {
+        flex: 0 0 auto;
     }
 
-    ::-webkit-scrollbar-track {
-        background-color: transparent;
+    .card>.content>div.meta {
+        flex: 1 1 auto;
+        -webkit-line-clamp: 3;
     }
 
-    ::-webkit-scrollbar-thumb {
-        background-color: #999999;
-        border-radius: 4px;
+    i.search-engine-button {
+        display: none;
     }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background-color: #cccccc;
-    }
+}

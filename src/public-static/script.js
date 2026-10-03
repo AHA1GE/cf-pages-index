@@ -51,3 +51,74 @@
 
     document.querySelectorAll('img.card-favicon-top-left-float').forEach(watch);
 })();
+
+// Daily wallpaper layer: asks the same-origin /bg/ alias for the current theme,
+// then cross-fades the dated immutable image in over the animated gradient.
+// Every failure path is silent - the gradient is already the visible design.
+(function () {
+    var wall = document.getElementById('bg-wallpaper');
+    if (!wall) return;
+
+    var themeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var PREFIX = 'cfpi-bg:';
+
+    function localDate() {
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+        var d = new Date();
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+    }
+
+    // keep only today's entries
+    function prune(today) {
+        try {
+            var doomed = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.indexOf(PREFIX) === 0 && k.indexOf(':' + today) === -1) doomed.push(k);
+            }
+            doomed.forEach(function (k) { localStorage.removeItem(k); });
+        } catch (e) { /* storage unavailable - non-fatal */ }
+    }
+
+    function show(url, animate) {
+        var img = new Image();
+        img.decoding = 'async';
+        img.onload = function () {
+            wall.style.backgroundImage = 'url("' + url.replace(/"/g, '%22') + '")';
+            if (!animate || reducedMotion.matches) wall.style.transition = 'none';
+            requestAnimationFrame(function () {
+                wall.classList.add('loaded');
+                requestAnimationFrame(function () { wall.style.transition = ''; });
+            });
+        };
+        img.src = url; // onerror: leave the gradient in place
+    }
+
+    function load(theme) {
+        var today = localDate();
+        var key = PREFIX + theme + ':' + today;
+        prune(today);
+        var memo = null;
+        try { memo = localStorage.getItem(key); } catch (e) { /* private mode */ }
+        if (memo) { show(memo, false); return; }
+        fetch('/bg/today-' + theme + '.jpg', { credentials: 'omit' })
+            .then(function (res) {
+                if (!res.ok) throw new Error('bg ' + res.status);
+                return res.url; // fetch followed the 302: the dated canonical URL
+            })
+            .then(function (url) {
+                try { localStorage.setItem(key, url); } catch (e) { /* non-fatal */ }
+                show(url, true);
+            })
+            .catch(function () { /* gradient stays; retried next visit */ });
+    }
+
+    load(themeMedia.matches ? 'dark' : 'light');
+    function onChange(e) { load(e.matches ? 'dark' : 'light'); }
+    if (themeMedia.addEventListener) {
+        themeMedia.addEventListener('change', onChange);
+    } else if (themeMedia.addListener) {
+        themeMedia.addListener(onChange); // older Safari
+    }
+})();

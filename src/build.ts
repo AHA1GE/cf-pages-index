@@ -42,6 +42,16 @@ function headElement(tag: string, attrs: string[]): string {
   return `<${tag} ${attrs.join(" ")}>`;
 }
 
+// Content-hash asset URLs: responses carry long-lived cache headers, so the
+// hash forces visitors to pick up new CSS/JS after each deploy.
+function assetVersion(rel: string): string {
+  const content = fs.readFileSync(path.join('src/public-static', rel));
+  return createHash('sha1').update(content).digest('hex').slice(0, 10);
+}
+
+const cssVersion = assetVersion('index.css');
+const jsVersion = assetVersion('script.js');
+
 function composeFaviconGetterUri(target: string, size: string): string {
   // the suffix busts browser caches (responses are immutable); bump the salt to force a refresh after worker changes
   const hashedTarget = createHash('md5').update(target + ':v3').digest('hex');
@@ -96,11 +106,14 @@ function generateStaticHTML(lang: string): string {
       <html lang="${lang}">
         <head src="/dynamicHeads.html"></head>
         <body>
+          <div class="bg-base" aria-hidden="true"></div>
+          <div class="bg-wallpaper" id="bg-wallpaper" aria-hidden="true"></div>
+          <div class="bg-noise" aria-hidden="true"></div>
           <header></header>
           <main></main>
           <footer></footer>
           <script src="/dynamic.js"></script>
-          <script src="/script.js"></script>
+          <script src="/script.js?v=${jsVersion}"></script>
         </body>
       </html>
     `;
@@ -122,6 +135,12 @@ async function generateDynamicHead(lang: string): Promise<string> {
       'name="viewport" content="width=device-width, initial-scale=1.0"',
     ]),
     headElement("meta", ['http-equiv="X-UA-Compatible" content="ie=edge"']),
+    headElement("meta", [
+      'name="theme-color" media="(prefers-color-scheme: light)" content="#93a6c6"',
+    ]),
+    headElement("meta", [
+      'name="theme-color" media="(prefers-color-scheme: dark)" content="#1b2237"',
+    ]),
     element("title", [], `${multiLang(lang, config.title)} - ${multiLang(lang, config.subtitle)}`),
     headElement("link", [
       'rel="apple-touch-icon"',
@@ -132,7 +151,7 @@ async function generateDynamicHead(lang: string): Promise<string> {
       'rel="icon"',
       'href="https://ysun.site/images/favicon.ico"',
     ]),
-    headElement("link", ['rel="stylesheet"', 'href="/index.css"']),
+    headElement("link", ['rel="stylesheet"', `href="/index.css?v=${cssVersion}"`]),
     "</head>",
   ];
   const head: string = headList.join("\n");

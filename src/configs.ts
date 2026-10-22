@@ -167,18 +167,6 @@ const config: Config = {
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://ts532x.ahaigege.com/",
-                    "name": {
-                        "en-us": "TS532X TUN",
-                        "zh-cn": "TS532X隧道"
-                    },
-                    "desc": {
-                        "en-us": "Go to QNAP NAS TS532X (tunneled)",
-                        "zh-cn": "前往QNAP NAS TS532X（隧道）"
-                    },
-                    "icon_size": "90"
-                },
-                {
                     "url": "https://fn.dofor.fun:5667/",
                     "name": {
                         "en-us": "FN OS",

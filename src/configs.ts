@@ -110,14 +110,14 @@ const config: Config = {
                     "icon_size": "90"
                 },
                 {
-                    "url": "https://v.ahaigege.com/",
+                    "url": "https://sub.ahaigege.com/",
                     "name": {
-                        "en-us": "Lobechat",
-                        "zh-cn": "Lobechat"
+                        "en-us": "Subscription",
+                        "zh-cn": "订阅"
                     },
                     "desc": {
-                        "en-us": "Lobechat on Vercel",
-                        "zh-cn": "Vercel上的Lobechat实例"
+                        "en-us": "Get subscriptions links",
+                        "zh-cn": "获取订阅链接"
                     },
                     "icon_size": "90"
                 },

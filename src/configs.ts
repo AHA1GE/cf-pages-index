@@ -224,6 +224,18 @@ const config: Config = {
                     "icon_size": "512"
                 },
                 {
+                    "url": "https://racetimer.dofor.fun/",
+                    "name": {
+                        "en-us": "rc car lap counter / timer",
+                        "zh-cn": "遥控车记圈计时器"
+                    },
+                    "desc": {
+                        "en-us": "count lap and time for rc car race",
+                        "zh-cn": "为遥控赛车比赛计时记圈"
+                    },
+                    "icon_size": "512"
+                },
+                {
                     "url": "https://reader.aha1.top/",
                     "name": {
                         "en-us": "Reader",

@@ -226,8 +226,8 @@ const config: Config = {
                 {
                     "url": "https://racetimer.dofor.fun/",
                     "name": {
-                        "en-us": "rc car lap counter / timer",
-                        "zh-cn": "遥控车记圈计时器"
+                        "en-us": "Race Timer",
+                        "zh-cn": "赛车计时器"
                     },
                     "desc": {
                         "en-us": "count lap and time for rc car race",
